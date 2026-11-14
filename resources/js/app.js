@@ -164,10 +164,167 @@ window.initSelect2 = function(context = document) {
     });
 };
 
+// Interactive Top Progress Bar & Async Loading Controller
+window.AzkaLoading = {
+    bar: null,
+    progress: 0,
+    timer: null,
+
+    init: function() {
+        if (!this.bar) {
+            let el = document.getElementById('azka-top-loader');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'azka-top-loader';
+                el.style.cssText = 'position:fixed;top:0;left:0;height:3.5px;width:0%;background:linear-gradient(90deg, #D6A84F, #172B4D, #D6A84F);background-size:200% 100%;box-shadow:0 0 12px rgba(214,168,79,0.85);z-index:999999;transition:width 0.25s ease, opacity 0.4s ease;pointer-events:none;opacity:0;';
+                document.body.appendChild(el);
+            }
+            this.bar = el;
+        }
+    },
+
+    start: function() {
+        this.init();
+        if (this.timer) clearInterval(this.timer);
+        this.progress = 25;
+        this.bar.style.opacity = '1';
+        this.bar.style.width = this.progress + '%';
+
+        this.timer = setInterval(() => {
+            if (this.progress < 85) {
+                this.progress += Math.random() * 12;
+                if (this.progress > 85) this.progress = 85;
+                if (this.bar) this.bar.style.width = this.progress + '%';
+            }
+        }, 180);
+    },
+
+    set: function(val) {
+        this.init();
+        this.progress = val;
+        if (this.bar) {
+            this.bar.style.opacity = '1';
+            this.bar.style.width = val + '%';
+        }
+    },
+
+    done: function() {
+        this.init();
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+        if (this.bar) {
+            this.bar.style.width = '100%';
+            setTimeout(() => {
+                if (this.bar) this.bar.style.opacity = '0';
+                setTimeout(() => {
+                    if (this.bar) this.bar.style.width = '0%';
+                }, 300);
+            }, 250);
+        }
+    }
+};
+
+// Global Asynchronous Interceptors (Fetch API & XMLHttpRequest)
+if (typeof window !== 'undefined') {
+    // 1. Fetch API Interceptor
+    const originalFetch = window.fetch;
+    if (originalFetch) {
+        window.fetch = async function(...args) {
+            window.AzkaLoading.start();
+            try {
+                const response = await originalFetch.apply(this, args);
+                window.AzkaLoading.done();
+                return response;
+            } catch (error) {
+                window.AzkaLoading.done();
+                throw error;
+            }
+        };
+    }
+
+    // 2. XMLHttpRequest Interceptor
+    const originalXHR = window.XMLHttpRequest;
+    if (originalXHR) {
+        const origOpen = originalXHR.prototype.open;
+        const origSend = originalXHR.prototype.send;
+        originalXHR.prototype.open = function(...args) {
+            this._azkaTracked = true;
+            return origOpen.apply(this, args);
+        };
+        originalXHR.prototype.send = function(...args) {
+            if (this._azkaTracked) {
+                window.AzkaLoading.start();
+                this.addEventListener('loadend', () => {
+                    window.AzkaLoading.done();
+                });
+            }
+            return origSend.apply(this, args);
+        };
+    }
+}
+
+// Show button loading spinner and prevent duplicate submissions
+function applyButtonLoading(form) {
+    if (!form || form.getAttribute('target') === '_blank') return;
+    const submitBtn = form.querySelector('button[type="submit"]:not([disabled])');
+    if (submitBtn) {
+        submitBtn.dataset.originalHtml = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-75', 'cursor-wait');
+
+        const spinnerSvg = `
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 inline-block text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        `;
+
+        const labelSpan = submitBtn.querySelector('span');
+        if (labelSpan) {
+            labelSpan.innerText = 'Memproses...';
+            submitBtn.insertAdjacentHTML('afterbegin', spinnerSvg);
+        } else {
+            submitBtn.innerHTML = `${spinnerSvg} <span>Memproses...</span>`;
+        }
+    }
+}
+
+// Trigger SweetAlert2 delete confirmation for a form
+window.triggerDeleteConfirm = function(form) {
+    if (!form || form.dataset.confirmed === 'true') {
+        return;
+    }
+
+    let customText = form.getAttribute('data-confirm');
+    const onsubmitAttr = form.getAttribute('onsubmit') || '';
+    if (!customText && onsubmitAttr) {
+        const match = onsubmitAttr.match(/confirm\(['"](.*?)['"]\)/);
+        if (match && match[1]) {
+            customText = match[1];
+        }
+    }
+
+    window.AzkaAlert.confirmDelete({
+        title: 'Konfirmasi Penghapusan',
+        text: customText || 'Apakah Anda yakin ingin menghapus data ini secara permanen?'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.dataset.confirmed = 'true';
+            form.onsubmit = null;
+            window.AzkaLoading.start();
+            applyButtonLoading(form);
+            form.submit();
+        }
+    });
+};
+
 // Auto intercept delete actions, flash messages in center, and initialize select2
 document.addEventListener('DOMContentLoaded', () => {
     window.renderIcons();
     window.initSelect2();
+    window.AzkaLoading.init();
 
     // Check for flash messages in DOM and display in the CENTER of the page
     const flashSuccess = document.querySelector('[data-flash-success]');
@@ -180,7 +337,20 @@ document.addEventListener('DOMContentLoaded', () => {
         window.AzkaAlert.error('Pemberitahuan', flashError.dataset.flashError);
     }
 
-    // Intercept all delete forms to display luxury SweetAlert2 confirmation in center
+    // Intercept delete clicks directly on buttons (.delete-confirm or buttons in delete forms)
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.delete-confirm, [data-delete-btn]');
+        if (btn) {
+            const form = btn.closest('form');
+            if (form) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.triggerDeleteConfirm(form);
+            }
+        }
+    }, true);
+
+    // Intercept form submissions
     document.addEventListener('submit', function(e) {
         const form = e.target;
         if (!form || form.tagName !== 'FORM') return;
@@ -197,27 +367,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
             e.preventDefault();
             e.stopImmediatePropagation();
+            window.triggerDeleteConfirm(form);
+            return;
+        }
 
-            let customText = form.getAttribute('data-confirm');
-            if (!customText && onsubmitAttr) {
-                const match = onsubmitAttr.match(/confirm\(['"](.*?)['"]\)/);
-                if (match && match[1]) {
-                    customText = match[1];
-                }
+        // Standard non-DELETE form submit (e.g. Save, Update, Filter)
+        if (form.getAttribute('target') !== '_blank') {
+            window.AzkaLoading.start();
+            // Apply button loading if method is POST/PUT/PATCH
+            const isMutation = form.method.toUpperCase() === 'POST' || form.querySelector('input[name="_method"]');
+            if (isMutation) {
+                applyButtonLoading(form);
             }
-
-            window.AzkaAlert.confirmDelete({
-                title: 'Konfirmasi Penghapusan',
-                text: customText || 'Apakah Anda yakin ingin menghapus data ini secara permanen?'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.dataset.confirmed = 'true';
-                    form.onsubmit = null;
-                    form.submit();
-                }
-            });
         }
     }, true);
+
+    // Global navigation feedback on standard internal links
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (!link) return;
+        const href = link.getAttribute('href');
+        const target = link.getAttribute('target');
+        if (
+            href && 
+            !href.startsWith('#') && 
+            !href.startsWith('javascript:') && 
+            !link.hasAttribute('download') && 
+            target !== '_blank' && 
+            !e.ctrlKey && !e.metaKey && !e.shiftKey
+        ) {
+            window.AzkaLoading.start();
+        }
+    });
+
+    window.addEventListener('pageshow', () => {
+        window.AzkaLoading.done();
+    });
 });
 
 Alpine.start();

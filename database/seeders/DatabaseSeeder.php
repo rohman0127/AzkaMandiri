@@ -20,6 +20,14 @@ class DatabaseSeeder extends Seeder
             ArticleSeeder::class,
             TestimonialSeeder::class,
             ContactMessageSeeder::class,
+            UnitSeeder::class,
+            InventoryCategorySeeder::class,
+            SupplierSeeder::class,
+            CustomerSeeder::class,
+            ProductSeeder::class,
+            PurchaseSeeder::class,
+            PosTransactionSeeder::class,
+            RbacSeeder::class,
         ]);
     }
 }

@@ -13,6 +13,8 @@
     --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
 
+    --color-primary: #172B4D;
+    --color-primary-hover: #101D33;
     --color-primary-navy: #172B4D;
     --color-dark-navy: #101D33;
     --color-navy-800: #1b2f52;

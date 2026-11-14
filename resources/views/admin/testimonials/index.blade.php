@@ -130,7 +130,7 @@
                                           class="inline form-delete">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="p-2 rounded-lg text-red-600 hover:bg-red-50 transition cursor-pointer" title="Hapus Testimoni">
+                                        <button type="submit" class="p-2 rounded-lg text-red-600 hover:bg-red-50 transition cursor-pointer delete-confirm" title="Hapus Testimoni">
                                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                                         </button>
                                     </form>

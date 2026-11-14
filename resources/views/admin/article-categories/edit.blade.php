@@ -4,7 +4,7 @@
 @section('breadcrumb', 'Kategori Artikel / Edit ' . $articleCategory->name)
 
 @section('content')
-<div class="w-full max-w-4xl space-y-6">
+<div class="w-full space-y-6">
     <div class="flex items-center justify-between">
         <div>
             <h2 class="text-xl font-extrabold text-[#172B4D]">Edit Kategori Artikel</h2>

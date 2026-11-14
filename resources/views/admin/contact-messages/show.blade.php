@@ -4,7 +4,7 @@
 @section('breadcrumb', 'Pesan Masuk / Detail dari ' . $contactMessage->name)
 
 @section('content')
-<div class="w-full max-w-5xl space-y-6">
+<div class="w-full space-y-6">
     <div class="flex items-center justify-between">
         <div>
             <h2 class="text-xl font-extrabold text-[#172B4D]">Detail Pesan Masuk</h2>
@@ -92,10 +92,11 @@
 
         <div class="pt-6 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">
             <form action="{{ route('admin.contact-messages.destroy', $contactMessage->id) }}" method="POST"
-                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus pesan ini secara permanen?');">
+                  class="inline form-delete"
+                  data-confirm="Apakah Anda yakin ingin menghapus pesan dari '{{ $contactMessage->name }}' secara permanen?">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="px-4 py-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 font-semibold text-xs transition flex items-center gap-1.5">
+                <button type="submit" class="px-4 py-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 font-semibold text-xs transition flex items-center gap-1.5 cursor-pointer delete-confirm">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                     <span>Hapus Pesan</span>
                 </button>

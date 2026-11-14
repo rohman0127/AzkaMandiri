@@ -8,8 +8,117 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/brand/favicon.svg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+
+    <style>
+        /* Screen defaults for print utilities */
+        .print-only {
+            display: none !important;
+        }
+
+        /* Document-Oriented Print Engine */
+        @media print {
+            @page {
+                size: A4 auto;
+                margin: 12mm 10mm 15mm 10mm;
+            }
+
+            html, body {
+                background: #ffffff !important;
+                background-color: #ffffff !important;
+                color: #0f172a !important;
+                font-size: 9.5pt !important;
+                line-height: 1.35 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Suppress Screen UI & Web Navigation */
+            aside,
+            header,
+            footer,
+            nav,
+            .screen-only,
+            .no-print,
+            button:not(.allow-print),
+            .btn-action,
+            .filter-section,
+            .filter-bar,
+            .breadcrumb-wrapper,
+            .pagination,
+            .alert-banner,
+            form[method="GET"] {
+                display: none !important;
+            }
+
+            /* Expand Layout to 100% Paper Width */
+            .lg\:pl-64,
+            div.lg\:pl-64 {
+                padding-left: 0 !important;
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            main {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* Reveal Print Document Components */
+            .print-only {
+                display: block !important;
+            }
+            .print-flex {
+                display: flex !important;
+            }
+            .print-grid {
+                display: grid !important;
+            }
+
+            /* Reset Web Shadows and Fluff */
+            .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xs, .shadow-xs {
+                box-shadow: none !important;
+            }
+            .rounded-2xl, .rounded-xl, .rounded-3xl {
+                border-radius: 4px !important;
+            }
+
+            /* Formal Accounting Print Tables */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            
+            thead {
+                display: table-header-group !important;
+            }
+
+            tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .print-border {
+                border: 1px solid #334155 !important;
+            }
+
+            .print-border-b {
+                border-bottom: 1px solid #cbd5e1 !important;
+            }
+
+            .break-inside-avoid {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
+    </style>
 </head>
 <body class="bg-[#F5F6F8] text-[#343A40] min-h-screen antialiased flex" x-data="{ sidebarOpen: false }">
+    <!-- Interactive Top Loading Bar -->
+    <div id="azka-top-loader" style="position:fixed;top:0;left:0;height:3.5px;width:0%;background:linear-gradient(90deg, #D6A84F, #172B4D, #D6A84F);background-size:200% 100%;box-shadow:0 0 12px rgba(214,168,79,0.85);z-index:999999;transition:width 0.25s ease, opacity 0.4s ease;pointer-events:none;opacity:0;"></div>
 
     <!-- Mobile Sidebar Backdrop -->
     <div x-show="sidebarOpen" 
@@ -23,9 +132,36 @@
          class="fixed inset-0 bg-black/60 z-40 lg:hidden" 
          style="display: none;"></div>
 
+    @php
+        $lowStockAlertCount = \App\Models\Product::where('type', 'standard')->whereColumn('stock', '<=', 'min_stock')->count();
+        $unreadCount = \App\Models\ContactMessage::unread()->count();
+
+        $isPosActive = request()->routeIs('admin.pos.*') || request()->routeIs('admin.customers.*');
+        $isInventoryActive = request()->routeIs('admin.inventory.*') || request()->routeIs('admin.products.*') || request()->routeIs('admin.categories.*') || request()->routeIs('admin.units.*') || request()->routeIs('admin.stock-adjustments.*');
+        $isSuppliersActive = request()->routeIs('admin.suppliers.*') || request()->routeIs('admin.purchases.*');
+        $isReportsActive = request()->routeIs('admin.reports.*');
+        $isCmsActive = request()->routeIs('admin.services.*') || request()->routeIs('admin.service-categories.*') || request()->routeIs('admin.portfolios.*') || request()->routeIs('admin.portfolio-categories.*') || request()->routeIs('admin.articles.*') || request()->routeIs('admin.article-categories.*') || request()->routeIs('admin.testimonials.*') || request()->routeIs('admin.contact-messages.*') || request()->routeIs('admin.contacts');
+        $isCompanyActive = request()->routeIs('admin.pages.*') || request()->routeIs('admin.settings.company');
+        $isSettingsActive = request()->routeIs('admin.settings.profile') || request()->routeIs('admin.settings.seo') || request()->routeIs('admin.settings') || request()->routeIs('admin.profile.*') || request()->routeIs('admin.users.*') || request()->routeIs('admin.roles.*');
+    @endphp
+
     <!-- Sidebar -->
     <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-           class="fixed inset-y-0 left-0 z-50 w-64 bg-[#101D33] text-gray-300 flex flex-col transition-transform duration-300 ease-in-out border-r border-white/5">
+           class="fixed inset-y-0 left-0 z-50 w-64 bg-[#101D33] text-gray-300 flex flex-col transition-transform duration-300 ease-in-out border-r border-white/5"
+           x-data="{
+               openGroups: {
+                   pos: {{ $isPosActive ? 'true' : 'false' }},
+                   inventory: {{ $isInventoryActive ? 'true' : 'false' }},
+                   suppliers: {{ $isSuppliersActive ? 'true' : 'false' }},
+                   reports: {{ $isReportsActive ? 'true' : 'false' }},
+                   cms: {{ $isCmsActive ? 'true' : 'false' }},
+                   company: {{ $isCompanyActive ? 'true' : 'false' }},
+                   settings: {{ $isSettingsActive ? 'true' : 'false' }}
+               },
+               toggle(group) {
+                   this.openGroups[group] = !this.openGroups[group];
+               }
+           }">
         
         <!-- Sidebar Brand Header -->
         <div class="h-18 flex items-center justify-between px-6 border-b border-white/10 bg-[#0a1322]/80">
@@ -41,129 +177,422 @@
             </button>
         </div>
 
-        <!-- Navigation Menu Links -->
-        <div class="flex-1 overflow-y-auto px-4 py-5 space-y-6 scrollbar-thin scrollbar-thumb-white/10">
-            <!-- Main Group -->
-            <div>
-                <p class="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Utama</p>
-                <nav class="space-y-1">
-                    <a href="{{ route('admin.dashboard') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.dashboard') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </nav>
-            </div>
+        <!-- Sidebar User Information Widget -->
+        <div class="p-3 border-b border-white/10 bg-[#0a1322]/60">
+            <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-white/5 border border-white/10 hover:border-[#D6A84F]/40 transition group">
+                <!-- User Avatar / Initials -->
+                <div class="relative shrink-0">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#172B4D] to-[#0a1322] text-[#D6A84F] font-black text-xs flex items-center justify-center border border-[#D6A84F]/30 shadow-xs ring-1 ring-white/10 group-hover:ring-[#D6A84F]/40 transition">
+                        {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 2)) }}
+                    </div>
+                    <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-[#101D33]" title="Online"></span>
+                </div>
 
-            <!-- Content Management Group -->
-            <div>
-                <p class="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Katalog &amp; Konten</p>
-                <nav class="space-y-1">
-                    <a href="{{ route('admin.services.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.services.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="wrench" class="w-4 h-4 shrink-0"></i>
-                        <span>Layanan</span>
+                <!-- User Name & Role -->
+                <div class="min-w-0 flex-1">
+                    <a href="{{ route('admin.profile.edit') }}" class="block truncate">
+                        <p class="text-xs font-bold text-white truncate leading-tight group-hover:text-[#D6A84F] transition">
+                            {{ auth()->user()->name ?? 'Administrator' }}
+                        </p>
+                        <p class="text-[10px] text-gray-400 mt-0.5 font-medium truncate">
+                            {{ auth()->user()->role_name ?? 'Administrator Utama' }}
+                        </p>
                     </a>
-                    <a href="{{ route('admin.service-categories.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.service-categories.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="folder-tree" class="w-4 h-4 shrink-0"></i>
-                        <span>Kategori Layanan</span>
-                    </a>
-                    <a href="{{ route('admin.portfolios.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.portfolios.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="images" class="w-4 h-4 shrink-0"></i>
-                        <span>Portofolio</span>
-                    </a>
-                    <a href="{{ route('admin.portfolio-categories.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.portfolio-categories.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="folder" class="w-4 h-4 shrink-0"></i>
-                        <span>Kategori Portofolio</span>
-                    </a>
-                    <a href="{{ route('admin.articles.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.articles.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="newspaper" class="w-4 h-4 shrink-0"></i>
-                        <span>Artikel Blog</span>
-                    </a>
-                    <a href="{{ route('admin.article-categories.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.article-categories.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="tag" class="w-4 h-4 shrink-0"></i>
-                        <span>Kategori Artikel</span>
-                    </a>
-                    <a href="{{ route('admin.testimonials.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.testimonials.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="quote" class="w-4 h-4 shrink-0"></i>
-                        <span>Testimoni</span>
-                    </a>
-                    <a href="{{ route('admin.pages.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.pages.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="file-text" class="w-4 h-4 shrink-0"></i>
-                        <span>Halaman Statis</span>
-                    </a>
-                </nav>
-            </div>
+                </div>
 
-            <!-- Inquiries & Settings -->
-            <div>
-                <p class="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Pesan &amp; Sistem</p>
-                <nav class="space-y-1">
-                    @php
-                        $unreadCount = \App\Models\ContactMessage::unread()->count();
-                    @endphp
-                    <a href="{{ route('admin.contact-messages.index') }}"
-                       class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.contact-messages.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="mail" class="w-4 h-4 shrink-0"></i>
-                            <span>Pesan Masuk</span>
-                        </div>
-                        @if($unreadCount > 0)
-                            <span class="px-2 py-0.5 text-xs font-bold bg-amber-500 text-black rounded-full">{{ $unreadCount }}</span>
-                        @endif
-                    </a>
-
-                    <a href="{{ route('admin.settings.profile') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.settings.profile') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="building-2" class="w-4 h-4 shrink-0"></i>
-                        <span>Profil &amp; Kontak</span>
-                    </a>
-
-                    <a href="{{ route('admin.settings.seo') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.settings.seo') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="search" class="w-4 h-4 shrink-0"></i>
-                        <span>Pengaturan SEO</span>
-                    </a>
-
-                    <a href="{{ route('admin.profile.edit') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition {{ request()->routeIs('admin.profile.edit') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
-                        <i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i>
-                        <span>Akun Administrator</span>
-                    </a>
-                </nav>
+                <!-- Quick Profile Link -->
+                <a href="{{ route('admin.profile.edit') }}" 
+                   class="p-1.5 rounded-lg text-gray-400 hover:text-[#D6A84F] hover:bg-white/10 transition shrink-0" 
+                   title="Profil &amp; Akun">
+                    <i data-lucide="user-cog" class="w-3.5 h-3.5"></i>
+                </a>
             </div>
         </div>
 
-        <!-- Sidebar Footer Action -->
-        <div class="p-4 border-t border-white/10 bg-[#0a1322]/80 space-y-2">
-            <a href="{{ url('/') }}" target="_blank"
-               class="flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300 hover:text-white transition">
-                <i data-lucide="external-link" class="w-3.5 h-3.5 text-[#D6A84F]"></i>
-                <span>Lihat Website Utama</span>
-            </a>
+        <!-- Navigation Menu Links (Accordion Groups) -->
+        <div class="flex-1 overflow-y-auto px-3.5 py-4 space-y-4 scrollbar-thin scrollbar-thumb-white/10">
+            
+            <!-- 1. 📊 MENU UTAMA (STANDALONE) -->
+            <div>
+                <p class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Menu Utama</p>
+                <nav class="space-y-1">
+                    <a href="{{ route('admin.dashboard') }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.dashboard') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0 {{ request()->routeIs('admin.dashboard') ? 'text-[#101D33]' : 'text-gray-400' }}"></i>
+                        <span>Dashboard Utama</span>
+                    </a>
+                </nav>
+            </div>
 
-            <form action="{{ route('admin.logout') }}" method="POST">
-                @csrf
-                <button type="submit" 
-                        class="flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-xs font-semibold text-red-300 hover:text-red-200 transition">
-                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-                    <span>Keluar (Logout)</span>
-                </button>
-            </form>
+            <!-- MODUL OPERASIONAL & KEUANGAN -->
+            <div>
+                <p class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Operasional &amp; Transaksi</p>
+                <div class="space-y-1.5">
+
+                    <!-- 2. 🛒 OPERASIONAL & KASIR (POS) -->
+                    @if(auth()->user()->can('pos.access') || auth()->user()->can('pos.view_transactions') || auth()->user()->can('customers.view'))
+                    <div>
+                        <button type="button" @click="toggle('pos')"
+                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isPosActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <i data-lucide="calculator" class="w-4 h-4 shrink-0 {{ $isPosActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
+                                <span class="truncate">Operasional Kasir</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.pos ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </span>
+                            </div>
+                        </button>
+                        
+
+                        <div x-show="openGroups.pos"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 -translate-y-1"
+                             class="relative mt-1 ml-5 pl-3 border-l border-slate-700/60 space-y-1 py-0.5">
+                            @can('pos.access')
+                            <a href="{{ route('admin.pos.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.pos.index') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Kasir Penjualan</span>
+                            </a>
+                            @endcan
+                            @can('pos.view_transactions')
+                            <a href="{{ route('admin.pos.transactions') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.pos.transactions') || request()->routeIs('admin.pos.show') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Riwayat Transaksi</span>
+                            </a>
+                            @endcan
+                            @can('customers.view')
+                            <a href="{{ route('admin.customers.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.customers.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Direktori Pelanggan</span>
+                            </a>
+                            @endcan
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- 3. 📦 INVENTARIS & STOK -->
+                    @if(auth()->user()->can('products.view') || auth()->user()->can('inventory.adjust_stock') || auth()->user()->can('inventory.categories'))
+                    <div>
+                        <button type="button" @click="toggle('inventory')"
+                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isInventoryActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <i data-lucide="package" class="w-4 h-4 shrink-0 {{ $isInventoryActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
+                                <span class="truncate">Inventaris &amp; Stok</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.inventory ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </span>
+                            </div>
+                        </button>
+
+                        <div x-show="openGroups.inventory"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 -translate-y-1"
+                             class="relative mt-1 ml-5 pl-3 border-l border-slate-700/60 space-y-1 py-0.5">
+                            @can('products.view')
+                            <a href="{{ route('admin.inventory.products.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.inventory.products.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Produk &amp; Material</span>
+                                @if($lowStockAlertCount > 0)
+                                    <span class="px-1.5 py-0.2 text-[9px] bg-red-500 text-white font-bold rounded-full">{{ $lowStockAlertCount }}</span>
+                                @endif
+                            </a>
+                            @endcan
+                            @can('inventory.categories')
+                            <a href="{{ route('admin.inventory.categories.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.inventory.categories.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Kategori Produk</span>
+                            </a>
+                            @endcan
+                            @can('inventory.units')
+                            <a href="{{ route('admin.inventory.units.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.inventory.units.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Satuan Barang</span>
+                            </a>
+                            @endcan
+                            @can('inventory.adjust_stock')
+                            <a href="{{ route('admin.inventory.stock-adjustments.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.inventory.stock-adjustments.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Stok Opname / Koreksi</span>
+                            </a>
+                            @endcan
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- 4. 🚚 SUPPLIER & PEMBELIAN -->
+                    @if(auth()->user()->can('suppliers.view') || auth()->user()->can('purchases.view') || auth()->user()->can('purchases.create'))
+                    <div>
+                        <button type="button" @click="toggle('suppliers')"
+                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isSuppliersActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <i data-lucide="truck" class="w-4 h-4 shrink-0 {{ $isSuppliersActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
+                                <span class="truncate">Supplier &amp; Pembelian</span>
+                            </div>
+                            <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.suppliers ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                            </span>
+                        </button>
+
+                        <div x-show="openGroups.suppliers"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 -translate-y-1"
+                             class="relative mt-1 ml-5 pl-3 border-l border-slate-700/60 space-y-1 py-0.5">
+                            @can('suppliers.view')
+                            <a href="{{ route('admin.suppliers.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.suppliers.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Data Supplier</span>
+                            </a>
+                            @endcan
+                            @can('purchases.view')
+                            <a href="{{ route('admin.purchases.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.purchases.index') || request()->routeIs('admin.purchases.show') || request()->routeIs('admin.purchases.edit') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Riwayat Belanja Stok</span>
+                            </a>
+                            @endcan
+                            @can('purchases.create')
+                            <a href="{{ route('admin.purchases.create') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.purchases.create') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Input Belanja Masuk</span>
+                            </a>
+                            @endcan
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- 5. 📈 LAPORAN & KEUANGAN -->
+                    @if(auth()->user()->can('reports.sales') || auth()->user()->can('reports.purchases') || auth()->user()->can('reports.profit_loss') || auth()->user()->can('reports.stock'))
+                    <div>
+                        <button type="button" @click="toggle('reports')"
+                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isReportsActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <i data-lucide="bar-chart-3" class="w-4 h-4 shrink-0 {{ $isReportsActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
+                                <span class="truncate">Laporan &amp; Keuangan</span>
+                            </div>
+                            <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.reports ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                            </span>
+                        </button>
+
+                        <div x-show="openGroups.reports"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 -translate-y-1"
+                             class="relative mt-1 ml-5 pl-3 border-l border-slate-700/60 space-y-1 py-0.5">
+                            @can('reports.sales')
+                            <a href="{{ route('admin.reports.sales') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.reports.sales') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Laporan Penjualan</span>
+                            </a>
+                            @endcan
+                            @can('reports.purchases')
+                            <a href="{{ route('admin.reports.purchases') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.reports.purchases*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Laporan Pembelian</span>
+                            </a>
+                            @endcan
+                            @can('reports.profit_loss')
+                            <a href="{{ route('admin.reports.profit-loss') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.reports.profit-loss') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Laba Rugi (Profit)</span>
+                            </a>
+                            @endcan
+                            @can('reports.stock')
+                            <a href="{{ route('admin.reports.stock') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.reports.stock') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Valuasi &amp; Sisa Stok</span>
+                            </a>
+                            @endcan
+                        </div>
+                    </div>
+                    @endif
+
+                </div>
+            </div>
+
+            <!-- MODUL KONTEN & PROFIL USAHA -->
+            <div>
+                <p class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Konten &amp; Profil Publik</p>
+                <div class="space-y-1.5">
+
+                    <!-- 6. 🌐 MANAJEMEN KONTEN PUBLIK (CMS) -->
+                    @if(auth()->user()->can('services.manage') || auth()->user()->can('portfolios.manage') || auth()->user()->can('articles.manage') || auth()->user()->can('testimonials.manage') || auth()->user()->can('messages.view'))
+                    <div>
+                        <button type="button" @click="toggle('cms')"
+                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isCmsActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <i data-lucide="globe" class="w-4 h-4 shrink-0 {{ $isCmsActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
+                                <span class="truncate">Manajemen Website</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.cms ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                </span>
+                            </div>
+                        </button>
+
+                        <div x-show="openGroups.cms"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 -translate-y-1"
+                             class="relative mt-1 ml-5 pl-3 border-l border-slate-700/60 space-y-1 py-0.5">
+                            @can('services.manage')
+                            <a href="{{ route('admin.services.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.services.*') || request()->routeIs('admin.service-categories.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Manajemen Layanan</span>
+                            </a>
+                            @endcan
+                            @can('portfolios.manage')
+                            <a href="{{ route('admin.portfolios.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.portfolios.*') || request()->routeIs('admin.portfolio-categories.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Manajemen Portofolio</span>
+                            </a>
+                            @endcan
+                            @can('articles.manage')
+                            <a href="{{ route('admin.articles.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.articles.*') || request()->routeIs('admin.article-categories.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Manajemen Artikel</span>
+                            </a>
+                            @endcan
+                            @can('testimonials.manage')
+                            <a href="{{ route('admin.testimonials.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.testimonials.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Testimoni Klien</span>
+                            </a>
+                            @endcan
+                            @can('messages.view')
+                            <a href="{{ route('admin.contact-messages.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.contact-messages.*') || request()->routeIs('admin.contacts') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Pesan Masuk</span>
+                            </a>
+                            @endcan
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- 7. 🏢 PROFIL & INFORMASI USAHA -->
+                    @if(auth()->user()->can('pages.manage'))
+                    <div>
+                        <button type="button" @click="toggle('company')"
+                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isCompanyActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <i data-lucide="building-2" class="w-4 h-4 shrink-0 {{ $isCompanyActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
+                                <span class="truncate">Profil Perusahaan</span>
+                            </div>
+                            <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.company ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                            </span>
+                        </button>
+
+                        <div x-show="openGroups.company"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 -translate-y-1"
+                             class="relative mt-1 ml-5 pl-3 border-l border-slate-700/60 space-y-1 py-0.5">
+                            <a href="{{ route('admin.pages.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.pages.*') || request()->routeIs('admin.settings.company') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Profil Perusahaan / Halaman</span>
+                            </a>
+                        </div>
+                    </div>
+                    @endif
+
+                </div>
+            </div>
+
+            <!-- MODUL SISTEM & ADMINISTRASI -->
+            <div>
+                <p class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Sistem &amp; Administrasi</p>
+                <div class="space-y-1.5">
+
+                    <!-- 8. 🛡️ PENGATURAN SISTEM & AKSES (ADMIN AREA) -->
+                    @if(auth()->user()->can('settings.profile') || auth()->user()->can('settings.seo') || auth()->user()->can('users.view') || auth()->user()->can('roles.manage'))
+                    <div>
+                        <button type="button" @click="toggle('settings')"
+                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isSettingsActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <i data-lucide="shield" class="w-4 h-4 shrink-0 {{ $isSettingsActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
+                                <span class="truncate">Pengaturan Sistem</span>
+                            </div>
+                            <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.settings ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                            </span>
+                        </button>
+
+                        <div x-show="openGroups.settings"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 -translate-y-1"
+                             class="relative mt-1 ml-5 pl-3 border-l border-slate-700/60 space-y-1 py-0.5">
+                            @can('settings.profile')
+                            <a href="{{ route('admin.settings.profile') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.settings.profile') || request()->routeIs('admin.settings') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Pengaturan Website</span>
+                            </a>
+                            @endcan
+                            @can('settings.seo')
+                            <a href="{{ route('admin.settings.seo') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.settings.seo') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Konfigurasi SEO</span>
+                            </a>
+                            @endcan
+                            @can('users.view')
+                            <a href="{{ route('admin.users.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.users.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Manajemen Pengguna</span>
+                            </a>
+                            @endcan
+                            @can('roles.manage')
+                            <a href="{{ route('admin.roles.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.roles.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Peran &amp; Hak Akses</span>
+                            </a>
+                            @endcan
+                            <a href="{{ route('admin.profile.edit') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.profile.edit') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Akun Administrator</span>
+                            </a>
+                        </div>
+                    </div>
+                    @endif
+
+                </div>
+            </div>
+
         </div>
     </aside>
 
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
         <!-- Topbar -->
-        <header class="h-20 bg-white border-b border-gray-200 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 lg:px-8 shadow-xs">
+        <header class="h-20 bg-white border-b border-gray-200 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 shadow-xs">
             <div class="flex items-center gap-4 min-w-0">
                 <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100 shrink-0">
                     <i data-lucide="menu" class="w-5 h-5"></i>
@@ -176,19 +605,72 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-4 shrink-0">
+            <div class="flex items-center gap-3 sm:gap-4 shrink-0">
                 <a href="{{ url('/') }}" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition shadow-2xs">
                     <i data-lucide="globe" class="w-3.5 h-3.5 text-[#D6A84F]"></i>
                     <span>Lihat Website</span>
                 </a>
 
-                <div class="flex items-center gap-3 pl-3 border-l border-gray-200">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#172B4D] to-[#101D33] text-[#D6A84F] font-black text-xs flex items-center justify-center shadow-xs border border-white/10">
-                        {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 2)) }}
-                    </div>
-                    <div class="hidden md:block text-left">
-                        <p class="text-xs font-bold text-[#172B4D] leading-none">{{ auth()->user()->name ?? 'Administrator' }}</p>
-                        <p class="text-[10px] text-gray-500 mt-1 font-medium">Administrator Utama</p>
+                <!-- User Profile Dropdown Menu -->
+                <div class="relative pl-3 border-l border-gray-200" x-data="{ userMenuOpen: false }">
+                    <button type="button" 
+                            @click="userMenuOpen = !userMenuOpen" 
+                            @click.outside="userMenuOpen = false"
+                            class="flex items-center gap-2.5 p-1 sm:px-2.5 sm:py-1.5 rounded-2xl hover:bg-gray-50 transition cursor-pointer group focus:outline-hidden"
+                            :class="{ 'bg-gray-50 ring-2 ring-[#D6A84F]/30': userMenuOpen }">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#172B4D] to-[#101D33] text-[#D6A84F] font-black text-xs flex items-center justify-center shadow-xs border border-white/10 group-hover:border-[#D6A84F]/50 transition shrink-0">
+                            {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 2)) }}
+                        </div>
+                        <div class="hidden md:block text-left">
+                            <p class="text-xs font-bold text-[#172B4D] leading-none group-hover:text-[#D6A84F] transition">{{ auth()->user()->name ?? 'Administrator' }}</p>
+                            <p class="text-[10px] text-gray-500 mt-1 font-medium">{{ auth()->user()->role_name ?? 'Administrator Utama' }}</p>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600 transition ml-0.5" :class="{ 'rotate-180': userMenuOpen }"></i>
+                    </button>
+
+                    <!-- Dropdown Popover -->
+                    <div x-show="userMenuOpen"
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-100"
+                         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
+                         class="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-gray-100 shadow-xl py-2 z-50 text-gray-700 divide-y divide-gray-100"
+                         style="display: none;">
+                        
+                        <!-- User Meta Header -->
+                        <div class="px-4 py-2.5 bg-gray-50/70">
+                            <p class="text-xs font-bold text-[#172B4D] truncate">{{ auth()->user()->name ?? 'Administrator' }}</p>
+                            <p class="text-[11px] text-gray-500 truncate mt-0.5">{{ auth()->user()->email ?? '' }}</p>
+                            <div class="mt-1.5 flex items-center gap-1.5">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-semibold bg-[#D6A84F]/15 text-[#9E7324] border border-[#D6A84F]/30 uppercase">
+                                    {{ auth()->user()->role_name ?? 'Administrator Utama' }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown Actions -->
+                        <div class="p-1.5 space-y-0.5">
+                            <a href="{{ route('admin.profile.edit') }}" 
+                               @click="userMenuOpen = false"
+                               class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#172B4D] transition">
+                                <i data-lucide="user" class="w-4 h-4 text-gray-400"></i>
+                                <span>Lihat Profil</span>
+                            </a>
+                        </div>
+
+                        <!-- Logout Action -->
+                        <div class="p-1.5">
+                            <form action="{{ route('admin.logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" 
+                                        class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition cursor-pointer">
+                                    <i data-lucide="log-out" class="w-4 h-4 text-rose-500"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -203,7 +685,7 @@
         @endif
 
         <!-- Main Content (Full Width, Professional Layout) -->
-        <main class="flex-1 px-4 sm:px-6 lg:px-8 py-6 w-full">
+        <main class="flex-1 px-4 sm:px-6 py-6 w-full">
             @if(session('success'))
                 <div class="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200/80 text-emerald-900 text-sm flex items-center justify-between gap-3 shadow-xs">
                     <div class="flex items-center gap-3">
@@ -232,7 +714,7 @@
                 </div>
             @endif
 
-            @if($errors->any())
+            @if(isset($errors) && $errors->any())
                 <div class="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-900 text-sm shadow-xs">
                     <div class="flex items-center gap-2 font-bold mb-2">
                         <i data-lucide="alert-circle" class="w-5 h-5 text-rose-600 shrink-0"></i>
@@ -250,7 +732,7 @@
         </main>
 
         <!-- Admin Footer -->
-        <footer class="py-4 px-4 sm:px-6 lg:px-8 border-t border-gray-200 bg-white text-xs text-gray-500 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-2">
+        <footer class="py-4 px-4 sm:px-6 border-t border-gray-200 bg-white text-xs text-gray-500 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-2">
             <span>&copy; {{ date('Y') }} <strong>AzkaMandiri</strong> – Jasa Aluminium &amp; Kaca.</span>
             <span>Versi Sistem 1.0</span>
         </footer>
@@ -269,4 +751,3 @@
     </script>
 </body>
 </html>
-

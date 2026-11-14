@@ -188,7 +188,7 @@
                                           class="inline form-delete">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" title="Hapus Layanan" class="p-2 rounded-lg text-red-600 hover:bg-red-50 transition cursor-pointer">
+                                        <button type="submit" title="Hapus Layanan" class="p-2 rounded-lg text-red-600 hover:bg-red-50 transition cursor-pointer delete-confirm">
                                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                                         </button>
                                     </form>

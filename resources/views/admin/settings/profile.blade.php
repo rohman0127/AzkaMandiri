@@ -4,7 +4,7 @@
 @section('breadcrumb', 'Pengaturan / Profil & Informasi Usaha')
 
 @section('content')
-<div class="w-full max-w-5xl space-y-6">
+<div class="w-full space-y-6">
     <div>
         <h2 class="text-xl font-extrabold text-[#172B4D]">Profil &amp; Informasi Website</h2>
         <p class="text-xs text-gray-500">Kelola identitas brand, kontak WhatsApp, alamat, dan narasi profil AzkaMandiri</p>
