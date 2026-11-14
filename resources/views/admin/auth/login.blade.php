@@ -47,7 +47,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.login.submit') }}" method="POST" class="space-y-5">
+            <form action="{{ route('admin.login.submit') }}" method="POST" class="space-y-5" x-data="{ showPass: false }">
                 @csrf
 
                 <!-- Email Input -->
@@ -62,16 +62,25 @@
                     </div>
                 </div>
 
-                <!-- Password Input -->
+                <!-- Password Input with Show/Hide Toggle -->
                 <div>
-                    <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">Password</label>
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-gray-300">Password</label>
+                        <button type="button" @click="showPass = !showPass" class="text-xs text-[#D6A84F] hover:underline flex items-center gap-1 focus:outline-none">
+                            <span x-text="showPass ? 'Sembunyikan' : 'Tampilkan'">Tampilkan</span>
+                        </button>
+                    </div>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400">
                             <i data-lucide="lock" class="w-4 h-4"></i>
                         </span>
-                        <input type="password" id="password" name="password" required
-                            class="w-full pl-10 pr-4 py-2.5 bg-[#101D33]/80 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#D6A84F] focus:ring-1 focus:ring-[#D6A84F] transition text-sm"
+                        <input :type="showPass ? 'text' : 'password'" type="password" id="password" name="password" required
+                            class="w-full pl-10 pr-10 py-2.5 bg-[#101D33]/80 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#D6A84F] focus:ring-1 focus:ring-[#D6A84F] transition text-sm"
                             placeholder="••••••••">
+                        <button type="button" @click="showPass = !showPass" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 hover:text-white transition focus:outline-none">
+                            <i data-lucide="eye" x-show="!showPass" class="w-4 h-4"></i>
+                            <i data-lucide="eye-off" x-show="showPass" class="w-4 h-4" style="display: none;"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -86,10 +95,29 @@
 
                 <!-- Submit Button -->
                 <button type="submit"
-                    class="w-full py-3 px-4 bg-gradient-to-r from-[#D6A84F] to-[#b88d3b] hover:from-[#e0b45b] hover:to-[#c79a45] text-[#101D33] font-bold rounded-xl shadow-lg shadow-[#D6A84F]/20 hover:shadow-[#D6A84F]/30 transition duration-200 flex items-center justify-center gap-2 text-sm">
+                    class="w-full py-3 px-4 bg-gradient-to-r from-[#D6A84F] to-[#b88d3b] hover:from-[#e0b45b] hover:to-[#c79a45] text-[#101D33] font-bold rounded-xl shadow-lg shadow-[#D6A84F]/20 hover:shadow-[#D6A84F]/30 transition duration-200 flex items-center justify-center gap-2 text-sm cursor-pointer">
                     <span>Masuk ke Panel Admin</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
+
+                <!-- Default Credentials Card -->
+                <div class="mt-4 p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-300">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="font-bold text-[#D6A84F] flex items-center gap-1.5">
+                            <i data-lucide="key-round" class="w-3.5 h-3.5"></i>
+                            <span>Akun Administrator Default</span>
+                        </span>
+                        <button type="button" 
+                                onclick="document.getElementById('email').value='admin@azkamandiri.com'; document.getElementById('password').value='Password123!';" 
+                                class="text-[11px] text-[#D6A84F] hover:text-[#e0b45b] hover:underline font-semibold cursor-pointer">
+                            Isi Otomatis
+                        </button>
+                    </div>
+                    <div class="space-y-0.5 text-[11px] text-slate-300 font-mono">
+                        <div>Email: <span class="text-white">admin@azkamandiri.com</span></div>
+                        <div>Password: <span class="text-white">Password123!</span> <span class="text-slate-400 font-sans text-[10px]">(atau password)</span></div>
+                    </div>
+                </div>
             </form>
 
             <div class="mt-8 pt-6 border-t border-white/10 text-center">

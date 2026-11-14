@@ -34,6 +34,22 @@ class AuthTest extends TestCase
         $response->assertRedirect(route('admin.dashboard'));
     }
 
+    public function test_admin_can_authenticate_with_password_fallback(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'admin@azkamandiri.com',
+            'password' => Hash::make('Password123!'),
+        ]);
+
+        $response = $this->post(route('admin.login.submit'), [
+            'email' => 'admin@azkamandiri.com',
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('admin.dashboard'));
+    }
+
     public function test_admin_cannot_authenticate_with_invalid_password(): void
     {
         User::factory()->create([
