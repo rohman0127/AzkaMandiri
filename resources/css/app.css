@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+@import 'sweetalert2/dist/sweetalert2.min.css';
+@import './sweetalert-luxury.css';
+@import 'select2/dist/css/select2.min.css';
+@import './select2-luxury.css';
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+
+@theme {
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+
+    --color-primary-navy: #172B4D;
+    --color-dark-navy: #101D33;
+    --color-navy-800: #1b2f52;
+    --color-navy-900: #101D33;
+    --color-navy-950: #0a1322;
+    --color-gold: #D6A84F;
+    --color-gold-light: #f3dfb2;
+    --color-gold-hover: #c4963e;
+    --color-gold-dark: #a97e2c;
+    --color-light-gray: #F5F6F8;
+    --color-text-dark: #343A40;
+    --color-secondary-text: #737B87;
+}

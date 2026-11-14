@@ -1,0 +1,34 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80" fill="none">
+  <!-- Geometric Aluminum Window Frame Icon -->
+  <g transform="translate(10, 10)">
+    <!-- Outer Aluminum Frame -->
+    <rect x="0" y="0" width="60" height="60" rx="8" fill="#172B4D" stroke="#D6A84F" stroke-width="2.5"/>
+    <!-- Glass Panels (Window Panes) -->
+    <!-- Pane 1: Top-Left -->
+    <rect x="6" y="6" width="22" height="22" rx="3" fill="#F0F4F8" fill-opacity="0.9"/>
+    <path d="M7 7 L26 26" stroke="#D6A84F" stroke-width="1.5" stroke-opacity="0.4"/>
+    <!-- Pane 2: Top-Right -->
+    <rect x="32" y="6" width="22" height="22" rx="3" fill="#D6A84F" fill-opacity="0.25"/>
+    <path d="M33 7 L52 26" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.6"/>
+    <!-- Pane 3: Bottom-Left -->
+    <rect x="6" y="32" width="22" height="22" rx="3" fill="#D6A84F" fill-opacity="0.25"/>
+    <path d="M7 33 L26 52" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.6"/>
+    <!-- Pane 4: Bottom-Right with Gold Accent -->
+    <rect x="32" y="32" width="22" height="22" rx="3" fill="#101D33"/>
+    <!-- Central Divider Cross -->
+    <line x1="29.5" y1="2" x2="29.5" y2="58" stroke="#D6A84F" stroke-width="2.5"/>
+    <line x1="2" y1="29.5" x2="58" y2="29.5" stroke="#D6A84F" stroke-width="2.5"/>
+    <!-- Sleek Glazing Diamond Accent -->
+    <circle cx="30" cy="30" r="3" fill="#D6A84F"/>
+  </g>
+
+  <!-- Typography: AzkaMandiri -->
+  <g transform="translate(85, 42)">
+    <text font-family="'Inter', 'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="24" letter-spacing="-0.5" fill="#172B4D">AZKA<tspan fill="#D6A84F">MANDIRI</tspan></text>
+  </g>
+  <!-- Subtitle: JASA ALUMINIUM &amp; KACA -->
+  <g transform="translate(86, 59)">
+    <text font-family="'Inter', system-ui, sans-serif" font-weight="600" font-size="8.5" letter-spacing="2.2" fill="#737B87">ALUMINIUM &amp; KACA</text>
+  </g>
+</svg>
+

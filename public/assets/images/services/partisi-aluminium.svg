@@ -1,0 +1,64 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#101D33" />
+      <stop offset="100%" stop-color="#172B4D" />
+    </linearGradient>
+    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25" />
+      <stop offset="40%" stop-color="#82B1FF" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.05" />
+    </linearGradient>
+    <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2C3E50" />
+      <stop offset="50%" stop-color="#4A6572" />
+      <stop offset="100%" stop-color="#2C3E50" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFFFFF" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="800" height="600" fill="url(#bgGrad)" />
+  <rect width="800" height="600" fill="url(#grid)" />
+
+  <!-- Architectural Structure Frame -->
+  <g transform="translate(140, 70)">
+    <!-- Outer Heavy Aluminum Mullion Frame -->
+    <rect x="0" y="0" width="520" height="380" rx="6" fill="#1b2a47" stroke="url(#metalGrad)" stroke-width="12" />
+    <rect x="6" y="6" width="508" height="368" fill="none" stroke="#D6A84F" stroke-width="2" stroke-opacity="0.8" />
+
+    <!-- Left Large Glass Pane -->
+    <rect x="18" y="18" width="235" height="344" fill="url(#glassGrad)" stroke="#2C3E50" stroke-width="6" />
+    <!-- Glass Reflection Highlights -->
+    <polygon points="24,24 160,24 60,356 24,356" fill="#FFFFFF" fill-opacity="0.08" />
+    <line x1="20" y1="20" x2="250" y2="360" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.15" />
+
+    <!-- Right Window Split into Transom and Casement -->
+    <rect x="267" y="18" width="235" height="110" fill="url(#glassGrad)" stroke="#2C3E50" stroke-width="6" />
+    <polygon points="273,24 370,24 300,122 273,122" fill="#FFFFFF" fill-opacity="0.08" />
+
+    <rect x="267" y="136" width="235" height="226" fill="url(#glassGrad)" stroke="#2C3E50" stroke-width="6" />
+    <polygon points="273,142 390,142 320,356 273,356" fill="#FFFFFF" fill-opacity="0.08" />
+
+    <!-- Aluminum Handles / Hardware -->
+    <rect x="238" y="180" width="8" height="48" rx="3" fill="#D6A84F" />
+    <rect x="274" y="230" width="8" height="40" rx="3" fill="#D6A84F" />
+
+    <!-- Corner Joint Indicators -->
+    <circle cx="18" cy="18" r="3" fill="#D6A84F" />
+    <circle cx="502" cy="18" r="3" fill="#D6A84F" />
+    <circle cx="18" cy="362" r="3" fill="#D6A84F" />
+    <circle cx="502" cy="362" r="3" fill="#D6A84F" />
+  </g>
+
+  <!-- Modern Banner Card at Bottom -->
+  <g transform="translate(100, 480)">
+    <rect x="0" y="0" width="600" height="85" rx="12" fill="#101D33" fill-opacity="0.9" stroke="#D6A84F" stroke-width="1.5" />
+    <text x="30" y="38" font-family="'Inter', sans-serif" font-weight="700" font-size="22" fill="#FFFFFF">Partisi Aluminium &amp; Kaca</text>
+    <text x="30" y="62" font-family="'Inter', sans-serif" font-weight="500" font-size="13" fill="#D6A84F" letter-spacing="1">Penyekat Ruang Kantor &amp; Ruko • AZKAMANDIRI</text>
+    <circle cx="560" cy="42" r="18" fill="#D6A84F" fill-opacity="0.2" />
+    <polygon points="556,36 566,42 556,48" fill="#D6A84F" />
+  </g>
+</svg>

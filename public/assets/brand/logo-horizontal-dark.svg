@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80" fill="none">
+  <!-- Geometric Aluminum Window Frame Icon -->
+  <g transform="translate(10, 10)">
+    <!-- Outer Aluminum Frame -->
+    <rect x="0" y="0" width="60" height="60" rx="8" fill="#101D33" stroke="#D6A84F" stroke-width="2.5"/>
+    <!-- Glass Panels -->
+    <rect x="6" y="6" width="22" height="22" rx="3" fill="#FFFFFF" fill-opacity="0.15"/>
+    <path d="M7 7 L26 26" stroke="#FFFFFF" stroke-width="1.5" stroke-opacity="0.4"/>
+    <rect x="32" y="6" width="22" height="22" rx="3" fill="#D6A84F" fill-opacity="0.3"/>
+    <path d="M33 7 L52 26" stroke="#D6A84F" stroke-width="1.5" stroke-opacity="0.6"/>
+    <rect x="6" y="32" width="22" height="22" rx="3" fill="#D6A84F" fill-opacity="0.3"/>
+    <path d="M7 33 L26 52" stroke="#D6A84F" stroke-width="1.5" stroke-opacity="0.6"/>
+    <rect x="32" y="32" width="22" height="22" rx="3" fill="#FFFFFF" fill-opacity="0.2"/>
+    <!-- Central Divider Cross -->
+    <line x1="29.5" y1="2" x2="29.5" y2="58" stroke="#D6A84F" stroke-width="2.5"/>
+    <line x1="2" y1="29.5" x2="58" y2="29.5" stroke="#D6A84F" stroke-width="2.5"/>
+    <circle cx="30" cy="30" r="3" fill="#D6A84F"/>
+  </g>
+
+  <!-- Typography -->
+  <g transform="translate(85, 42)">
+    <text font-family="'Inter', 'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="24" letter-spacing="-0.5" fill="#FFFFFF">AZKA<tspan fill="#D6A84F">MANDIRI</tspan></text>
+  </g>
+  <g transform="translate(86, 59)">
+    <text font-family="'Inter', system-ui, sans-serif" font-weight="600" font-size="8.5" letter-spacing="2.2" fill="#D6A84F">ALUMINIUM &amp; KACA</text>
+  </g>
+</svg>
+
