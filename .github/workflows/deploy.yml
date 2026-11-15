@@ -148,6 +148,10 @@ jobs:
           echo "Uploading index.php..."
           curl -s --ftp-pasv -T index.php -u "$FTP_USER:$FTP_PASS" "$REMOTE_BASE/index.php"
 
+          # Upload public/index.php
+          echo "Uploading public/index.php..."
+          curl -s --ftp-pasv -T public/index.php -u "$FTP_USER:$FTP_PASS" "$REMOTE_BASE/public/index.php"
+
           # Upload .htaccess
           echo "Uploading .htaccess..."
           curl -s --ftp-pasv -T .htaccess -u "$FTP_USER:$FTP_PASS" "$REMOTE_BASE/.htaccess"
