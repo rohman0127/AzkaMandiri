@@ -84,6 +84,14 @@ jobs:
           cat << 'EOF' > .htaccess
           <IfModule mod_rewrite.c>
               RewriteEngine On
+              RewriteBase /
+
+              # Prevent internal rewrite loop
+              RewriteCond %{ENV:REDIRECT_STATUS} ^$
+              RewriteRule ^$ public/index.php [L]
+
+              # Send all non-public requests to public/ folder
+              RewriteCond %{ENV:REDIRECT_STATUS} ^$
               RewriteCond %{REQUEST_URI} !^/public/
               RewriteRule ^(.*)$ public/$1 [L]
           </IfModule>
