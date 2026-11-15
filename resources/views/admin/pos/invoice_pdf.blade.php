@@ -323,8 +323,7 @@
             <td style="width: 55%; padding-right: 15px;">
                 <div class="bank-info">
                     <strong>INFORMASI REKENING PEMBAYARAN:</strong><br>
-                    • Bank BCA: <strong>8830-123-456</strong> a.n. Azka Mandiri<br>
-                    • Bank Mandiri: <strong>155-00-9876-5432</strong> a.n. Azka Mandiri<br>
+                    • Bank BCA: <strong>474-0850-364</strong> a.n. Mikliw Oking<br>
                     <em>Harap cantumkan nomor invoice ({{ $transaction->invoice_code }}) pada berita transfer.</em>
                 </div>
 
