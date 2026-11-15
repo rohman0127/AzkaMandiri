@@ -39,6 +39,37 @@ set_exception_handler(function (\Throwable $e) {
     echo '</div>';
 });
 
+// Auto-extract deployment packages if present in root directory
+try {
+    $rootDir = dirname(__DIR__);
+    $zips = ['core.zip', 'public.zip', 'vendor_addons.zip', 'vendor.zip'];
+    $needsExtract = false;
+    foreach ($zips as $z) {
+        if (file_exists($rootDir . '/' . $z)) {
+            $needsExtract = true;
+            break;
+        }
+    }
+    if ($needsExtract && class_exists('ZipArchive')) {
+        @set_time_limit(300);
+        foreach ($zips as $z) {
+            $zipPath = $rootDir . '/' . $z;
+            if (file_exists($zipPath)) {
+                $zip = new ZipArchive();
+                if ($zip->open($zipPath) === true) {
+                    $zip->extractTo($rootDir);
+                    $zip->close();
+                    @unlink($zipPath);
+                }
+            }
+        }
+        @unlink($rootDir . '/bootstrap/cache/config.php');
+        @unlink($rootDir . '/bootstrap/cache/routes-v7.php');
+    }
+} catch (\Throwable $e) {
+    @file_put_contents(__DIR__ . '/deploy_error.log', "Deploy extract notice: " . $e->getMessage() . "\n", FILE_APPEND);
+}
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 

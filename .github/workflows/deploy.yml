@@ -96,7 +96,7 @@ jobs:
           EOF
 
           # 3. Create core.zip (Laravel core code without vendor, node_modules, or stale cache)
-          zip -r -q core.zip app bootstrap config database resources routes artisan composer.json composer.lock -x "bootstrap/cache/*.php"
+          zip -r -q core.zip app bootstrap config database resources routes artisan composer.json composer.lock -x "bootstrap/cache/config.php" "bootstrap/cache/routes-v7.php"
 
           # 4. Create public.zip (compiled Vite build assets, public icons, images - excluding storage)
           zip -r -q public.zip public/ -x "public/storage/*"

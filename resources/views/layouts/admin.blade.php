@@ -152,6 +152,10 @@
                                class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.pos.index') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
                                 <span>Kasir Penjualan</span>
                             </a>
+                            <a href="{{ route('admin.pos.quotations.index') }}"
+                               class="group relative flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-medium transition before:absolute before:-left-3 before:top-1/2 before:-translate-y-1/2 before:w-3 before:h-px {{ request()->routeIs('admin.pos.quotations.*') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-xs before:bg-[#D6A84F] before:h-0.5' : 'text-gray-400 hover:text-white hover:bg-white/5 before:bg-slate-700/60 hover:before:bg-gray-300' }}">
+                                <span>Penawaran Harga</span>
+                            </a>
                             @endcan
                             @can('pos.view_transactions')
                             <a href="{{ route('admin.pos.transactions') }}"

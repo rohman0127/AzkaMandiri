@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Admin\PortfolioCategoryController as AdminPortfolioCategoryController;
 use App\Http\Controllers\Admin\PortfolioController as AdminPortfolioController;
 use App\Http\Controllers\Admin\PosController as AdminPosController;
+use App\Http\Controllers\Admin\QuotationController as AdminQuotationController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProfileSettingController as AdminProfileSettingController;
 use App\Http\Controllers\Admin\PurchaseController as AdminPurchaseController;
@@ -126,10 +127,23 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // MODUL POS & MANAJEMEN INVENTARIS
     // ==========================================
 
-    // 1. Point of Sales (Kasir)
+    // 1. Point of Sales (Kasir & Penawaran Harga)
     Route::middleware(['permission:pos.access,pos.view_transactions'])->group(function () {
         Route::get('pos', [AdminPosController::class, 'index'])->name('pos.index');
         Route::post('pos/checkout', [AdminPosController::class, 'store'])->name('pos.store');
+
+        // Sub-modul Penawaran Harga (Quotations)
+        Route::get('pos/quotations', [AdminQuotationController::class, 'index'])->name('pos.quotations.index');
+        Route::get('pos/quotations/create', [AdminQuotationController::class, 'create'])->name('pos.quotations.create');
+        Route::post('pos/quotations', [AdminQuotationController::class, 'store'])->name('pos.quotations.store');
+        Route::get('pos/quotations/{quotation}', [AdminQuotationController::class, 'show'])->name('pos.quotations.show');
+        Route::get('pos/quotations/{quotation}/edit', [AdminQuotationController::class, 'edit'])->name('pos.quotations.edit');
+        Route::put('pos/quotations/{quotation}', [AdminQuotationController::class, 'update'])->name('pos.quotations.update');
+        Route::delete('pos/quotations/{quotation}', [AdminQuotationController::class, 'destroy'])->name('pos.quotations.destroy');
+        Route::patch('pos/quotations/{quotation}/status', [AdminQuotationController::class, 'updateStatus'])->name('pos.quotations.status');
+        Route::post('pos/quotations/{quotation}/convert', [AdminQuotationController::class, 'convert'])->name('pos.quotations.convert');
+        Route::get('pos/quotations/{quotation}/pdf', [AdminQuotationController::class, 'pdf'])->name('pos.quotations.pdf');
+
         Route::get('pos/transactions', [AdminPosController::class, 'transactions'])->name('pos.transactions');
         Route::get('pos/transactions/export', [AdminPosController::class, 'exportCsv'])->name('pos.transactions.export');
         Route::get('pos/transactions/{transaction}', [AdminPosController::class, 'show'])->name('pos.show');

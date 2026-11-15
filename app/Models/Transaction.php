@@ -60,6 +60,11 @@ class Transaction extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function quotation()
+    {
+        return $this->hasOne(Quotation::class, 'converted_transaction_id');
+    }
+
     public function getRemainingDebtAttribute(): float
     {
         return max(0, (float)$this->total_amount - (float)$this->paid_amount);
