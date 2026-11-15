@@ -1,0 +1,109 @@
+/* ==========================================================================
+   AzkaMandiri Print Stylesheet
+   Document-Oriented Print Engine for Reports, Invoices, and Orders
+   ========================================================================== */
+
+/* Screen defaults for print utilities */
+.print-only {
+    display: none !important;
+}
+
+/* Document-Oriented Print Engine */
+@media print {
+    @page {
+        size: A4 auto;
+        margin: 12mm 10mm 15mm 10mm;
+    }
+
+    html, body {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 9.5pt !important;
+        line-height: 1.35 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Suppress Screen UI & Web Navigation */
+    aside,
+    header,
+    footer,
+    nav,
+    .screen-only,
+    .no-print,
+    button:not(.allow-print),
+    .btn-action,
+    .filter-section,
+    .filter-bar,
+    .breadcrumb-wrapper,
+    .pagination,
+    .alert-banner,
+    form[method="GET"] {
+        display: none !important;
+    }
+
+    /* Expand Layout to 100% Paper Width */
+    .lg\:pl-64,
+    div.lg\:pl-64 {
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    main {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Reveal Print Document Components */
+    .print-only {
+        display: block !important;
+    }
+    .print-flex {
+        display: flex !important;
+    }
+    .print-grid {
+        display: grid !important;
+    }
+
+    /* Reset Web Shadows and Fluff */
+    .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xs, .shadow-xs {
+        box-shadow: none !important;
+    }
+    .rounded-2xl, .rounded-xl, .rounded-3xl {
+        border-radius: 4px !important;
+    }
+
+    /* Formal Accounting Print Tables */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+    
+    thead {
+        display: table-header-group !important;
+    }
+
+    tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .print-border {
+        border: 1px solid #334155 !important;
+    }
+
+    .print-border-b {
+        border-bottom: 1px solid #cbd5e1 !important;
+    }
+
+    .break-inside-avoid {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+}

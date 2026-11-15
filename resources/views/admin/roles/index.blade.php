@@ -106,7 +106,7 @@
                     <!-- Progress bar -->
                     <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
                         <div class="h-full rounded-full {{ $role->slug === 'super-admin' ? 'bg-purple-600' : ($percent >= 50 ? 'bg-emerald-500' : 'bg-primary') }}"
-                             style="width: {{ $percent }}%"></div>
+                             data-progress="{{ $percent }}"></div>
                     </div>
                 </div>
             </div>

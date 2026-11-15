@@ -79,7 +79,7 @@
                             placeholder="••••••••">
                         <button type="button" @click="showPass = !showPass" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 hover:text-white transition focus:outline-none">
                             <i data-lucide="eye" x-show="!showPass" class="w-4 h-4"></i>
-                            <i data-lucide="eye-off" x-show="showPass" class="w-4 h-4" style="display: none;"></i>
+                            <i data-lucide="eye-off" x-show="showPass" x-cloak class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>

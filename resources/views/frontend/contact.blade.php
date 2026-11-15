@@ -128,7 +128,7 @@
                         @csrf
 
                         {{-- Anti-Bot Honeypot Field --}}
-                        <div style="display:none !important; visibility:hidden !important; opacity:0 !important; position:absolute !important; left:-9999px !important;" aria-hidden="true">
+                        <div class="honeypot-field" aria-hidden="true">
                             <label for="website_hp">Website Field (Jangan Diisi)</label>
                             <input type="text" id="website_hp" name="website_hp" tabindex="-1" autocomplete="off" value="">
                         </div>
@@ -239,7 +239,7 @@
                 <h3 class="text-xl font-bold text-[#172B4D]">Peta Lokasi &amp; Wilayah Kerja</h3>
                 <div class="rounded-3xl overflow-hidden border border-gray-200 shadow-md h-96 bg-gray-200">
                     <iframe src="{{ setting('google_maps_embed') }}" 
-                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            class="w-full h-full border-0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
         @endif

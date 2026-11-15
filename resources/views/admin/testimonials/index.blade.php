@@ -158,7 +158,6 @@
     <!-- MODAL: Tambah Testimoni -->
     <div x-show="createModal" 
          class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-         style="display: none;"
          x-cloak>
         <div @click.outside="createModal = false" 
              x-ref="createModalCard"
@@ -245,7 +244,6 @@
     <!-- MODAL: Edit Testimoni -->
     <div x-show="editModal" 
          class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-         style="display: none;"
          x-cloak>
         <div @click.outside="editModal = false" 
              x-ref="editModalCard"

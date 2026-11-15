@@ -3,6 +3,7 @@
 @import './sweetalert-luxury.css';
 @import 'select2/dist/css/select2.min.css';
 @import './select2-luxury.css';
+@import './print.css';
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -28,3 +29,35 @@
     --color-text-dark: #343A40;
     --color-secondary-text: #737B87;
 }
+
+/* Alpine.js Cloak Directive */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Interactive Top Loading Bar */
+#azka-top-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3.5px;
+    width: 0%;
+    background: linear-gradient(90deg, #D6A84F, #172B4D, #D6A84F);
+    background-size: 200% 100%;
+    box-shadow: 0 0 12px rgba(214, 168, 79, 0.85);
+    z-index: 999999;
+    transition: width 0.25s ease, opacity 0.4s ease;
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* Anti-Bot Honeypot Field */
+.honeypot-field {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    pointer-events: none !important;
+}
+

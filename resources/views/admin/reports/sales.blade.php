@@ -208,7 +208,7 @@
                 </div>
                 <div class="text-base font-extrabold text-slate-900 font-mono">Rp {{ number_format($cashTotal, 0, ',', '.') }}</div>
                 <div class="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
-                    <div class="bg-emerald-600 h-full rounded-full" style="width: {{ $totalPaid > 0 ? ($cashTotal / $totalPaid) * 100 : 0 }}%"></div>
+                    <div class="bg-emerald-600 h-full rounded-full" data-progress="{{ $totalPaid > 0 ? ($cashTotal / $totalPaid) * 100 : 0 }}"></div>
                 </div>
             </div>
 
@@ -221,7 +221,7 @@
                 </div>
                 <div class="text-base font-extrabold text-slate-900 font-mono">Rp {{ number_format($transferTotal, 0, ',', '.') }}</div>
                 <div class="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
-                    <div class="bg-blue-600 h-full rounded-full" style="width: {{ $totalPaid > 0 ? ($transferTotal / $totalPaid) * 100 : 0 }}%"></div>
+                    <div class="bg-blue-600 h-full rounded-full" data-progress="{{ $totalPaid > 0 ? ($transferTotal / $totalPaid) * 100 : 0 }}"></div>
                 </div>
             </div>
 
@@ -234,7 +234,7 @@
                 </div>
                 <div class="text-base font-extrabold text-slate-900 font-mono">Rp {{ number_format($qrisTotal, 0, ',', '.') }}</div>
                 <div class="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
-                    <div class="bg-purple-600 h-full rounded-full" style="width: {{ $totalPaid > 0 ? ($qrisTotal / $totalPaid) * 100 : 0 }}%"></div>
+                    <div class="bg-purple-600 h-full rounded-full" data-progress="{{ $totalPaid > 0 ? ($qrisTotal / $totalPaid) * 100 : 0 }}"></div>
                 </div>
             </div>
         </div>

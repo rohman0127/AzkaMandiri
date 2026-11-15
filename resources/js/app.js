@@ -320,10 +320,19 @@ window.triggerDeleteConfirm = function(form) {
     });
 };
 
+// Initialize dynamic progress bar widths from data-progress attribute
+window.initProgressBars = function() {
+    document.querySelectorAll('[data-progress]').forEach(el => {
+        const val = parseFloat(el.dataset.progress) || 0;
+        el.style.width = `${Math.min(100, Math.max(0, val))}%`;
+    });
+};
+
 // Auto intercept delete actions, flash messages in center, and initialize select2
 document.addEventListener('DOMContentLoaded', () => {
     window.renderIcons();
     window.initSelect2();
+    window.initProgressBars();
     window.AzkaLoading.init();
 
     // Check for flash messages in DOM and display in the CENTER of the page

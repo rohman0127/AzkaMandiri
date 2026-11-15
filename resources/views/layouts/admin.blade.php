@@ -8,120 +8,14 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('assets/brand/favicon.svg') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
-
-    <style>
-        /* Screen defaults for print utilities */
-        .print-only {
-            display: none !important;
-        }
-
-        /* Document-Oriented Print Engine */
-        @media print {
-            @page {
-                size: A4 auto;
-                margin: 12mm 10mm 15mm 10mm;
-            }
-
-            html, body {
-                background: #ffffff !important;
-                background-color: #ffffff !important;
-                color: #0f172a !important;
-                font-size: 9.5pt !important;
-                line-height: 1.35 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            /* Suppress Screen UI & Web Navigation */
-            aside,
-            header,
-            footer,
-            nav,
-            .screen-only,
-            .no-print,
-            button:not(.allow-print),
-            .btn-action,
-            .filter-section,
-            .filter-bar,
-            .breadcrumb-wrapper,
-            .pagination,
-            .alert-banner,
-            form[method="GET"] {
-                display: none !important;
-            }
-
-            /* Expand Layout to 100% Paper Width */
-            .lg\:pl-64,
-            div.lg\:pl-64 {
-                padding-left: 0 !important;
-                margin-left: 0 !important;
-                width: 100% !important;
-            }
-
-            main {
-                padding: 0 !important;
-                margin: 0 !important;
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-
-            /* Reveal Print Document Components */
-            .print-only {
-                display: block !important;
-            }
-            .print-flex {
-                display: flex !important;
-            }
-            .print-grid {
-                display: grid !important;
-            }
-
-            /* Reset Web Shadows and Fluff */
-            .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xs, .shadow-xs {
-                box-shadow: none !important;
-            }
-            .rounded-2xl, .rounded-xl, .rounded-3xl {
-                border-radius: 4px !important;
-            }
-
-            /* Formal Accounting Print Tables */
-            table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-            }
-            
-            thead {
-                display: table-header-group !important;
-            }
-
-            tr {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-
-            .print-border {
-                border: 1px solid #334155 !important;
-            }
-
-            .print-border-b {
-                border-bottom: 1px solid #cbd5e1 !important;
-            }
-
-            .break-inside-avoid {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
-        }
-    </style>
 </head>
 <body class="bg-[#F5F6F8] text-[#343A40] min-h-screen antialiased flex" x-data="{ sidebarOpen: false }">
     <!-- Interactive Top Loading Bar -->
-    <div id="azka-top-loader" style="position:fixed;top:0;left:0;height:3.5px;width:0%;background:linear-gradient(90deg, #D6A84F, #172B4D, #D6A84F);background-size:200% 100%;box-shadow:0 0 12px rgba(214,168,79,0.85);z-index:999999;transition:width 0.25s ease, opacity 0.4s ease;pointer-events:none;opacity:0;"></div>
+    <div id="azka-top-loader"></div>
 
     <!-- Mobile Sidebar Backdrop -->
     <div x-show="sidebarOpen" 
+         x-cloak
          x-transition:enter="transition-opacity ease-linear duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
@@ -129,8 +23,7 @@
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
          @click="sidebarOpen = false" 
-         class="fixed inset-0 bg-black/60 z-40 lg:hidden" 
-         style="display: none;"></div>
+         class="fixed inset-0 bg-black/60 z-40 lg:hidden"></div>
 
     @php
         $lowStockAlertCount = \App\Models\Product::where('type', 'standard')->whereColumn('stock', '<=', 'min_stock')->count();
@@ -630,14 +523,14 @@
 
                     <!-- Dropdown Popover -->
                     <div x-show="userMenuOpen"
+                         x-cloak
                          x-transition:enter="transition ease-out duration-150"
                          x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
                          x-transition:enter-end="opacity-100 scale-100 translate-y-0"
                          x-transition:leave="transition ease-in duration-100"
                          x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                          x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
-                         class="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-gray-100 shadow-xl py-2 z-50 text-gray-700 divide-y divide-gray-100"
-                         style="display: none;">
+                         class="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-gray-100 shadow-xl py-2 z-50 text-gray-700 divide-y divide-gray-100">
                         
                         <!-- User Meta Header -->
                         <div class="px-4 py-2.5 bg-gray-50/70">
@@ -739,15 +632,5 @@
     </div>
 
     @stack('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.renderIcons) {
-                window.renderIcons();
-            }
-            if (window.initSelect2) {
-                window.initSelect2();
-            }
-        });
-    </script>
 </body>
 </html>

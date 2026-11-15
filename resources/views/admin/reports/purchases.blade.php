@@ -328,17 +328,17 @@
     <div class="print-only mt-8">
         <table class="w-full text-center text-xs">
             <tr>
-                <td style="width: 50%;">
+                <td class="w-1/2">
                     <p class="text-slate-500 text-[10px] mb-1">Diverifikasi &amp; Disiapkan Oleh:</p>
                     <p class="font-bold text-slate-800">Petugas Logistik / Admin</p>
-                    <div style="height: 60px;"></div>
+                    <div class="h-[60px]"></div>
                     <p class="font-bold text-slate-900 uppercase">({{ auth()->user()->name ?? 'Administrator' }})</p>
                     <p class="text-[9px] text-slate-500">Staff Gudang &amp; Inventaris</p>
                 </td>
-                <td style="width: 50%;">
+                <td class="w-1/2">
                     <p class="text-slate-500 text-[10px] mb-1">Mengetahui &amp; Menyetujui:</p>
                     <p class="font-bold text-slate-800">Pimpinan AzkaMandiri</p>
-                    <div style="height: 60px;"></div>
+                    <div class="h-[60px]"></div>
                     <p class="font-bold text-slate-900 uppercase">( Ir. H. Azka Pratama )</p>
                     <p class="text-[9px] text-slate-500">Direktur Operasional</p>
                 </td>

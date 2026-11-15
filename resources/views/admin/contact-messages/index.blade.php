@@ -182,7 +182,6 @@
     <!-- ========================================================================= -->
     <div x-show="detailModal" 
          class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
-         style="display: none;"
          x-cloak>
         <div @click.outside="detailModal = false" 
              x-ref="detailModalCard"

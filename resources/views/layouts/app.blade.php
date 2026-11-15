@@ -151,21 +151,21 @@
                             class="p-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition"
                             aria-label="Toggle navigation">
                         <i x-show="!mobileMenuOpen" data-lucide="menu" class="w-6 h-6"></i>
-                        <i x-show="mobileMenuOpen" data-lucide="x" class="w-6 h-6" style="display: none;"></i>
+                        <i x-show="mobileMenuOpen" x-cloak data-lucide="x" class="w-6 h-6"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Mobile Drawer Menu -->
             <div x-show="mobileMenuOpen" 
+                 x-cloak
                  x-transition:enter="transition ease-out duration-200"
                  x-transition:enter-start="opacity-0 -translate-y-4"
                  x-transition:enter-end="opacity-100 translate-y-0"
                  x-transition:leave="transition ease-in duration-150"
                  x-transition:leave-start="opacity-100 translate-y-0"
                  x-transition:leave-end="opacity-0 -translate-y-4"
-                 class="lg:hidden pt-4 pb-6 border-t border-white/10 mt-3 space-y-2"
-                 style="display: none;">
+                 class="lg:hidden pt-4 pb-6 border-t border-white/10 mt-3 space-y-2">
                 <a href="{{ route('home') }}" @click="mobileMenuOpen = false"
                    class="block px-3 py-2 rounded-lg text-sm font-semibold {{ request()->routeIs('home') ? 'bg-[#D6A84F] text-[#101D33]' : 'text-gray-200 hover:bg-white/5' }}">
                     Home
@@ -328,12 +328,5 @@
     </footer>
 
     @stack('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.renderIcons) {
-                window.renderIcons();
-            }
-        });
-    </script>
 </body>
 </html>

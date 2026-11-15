@@ -299,7 +299,7 @@
     </div>
 
     <!-- Modal Catat Pembayaran / Pelunasan Piutang -->
-    <div x-show="showPaymentModal" style="display: none;"
+    <div x-show="showPaymentModal" x-cloak
          class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden"
              @click.away="showPaymentModal = false">

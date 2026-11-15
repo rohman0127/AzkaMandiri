@@ -186,7 +186,7 @@
             <table class="w-full text-left border-collapse text-xs print:text-[8pt]">
                 <thead>
                     <tr class="bg-slate-100 border-b border-slate-300 text-slate-800 font-bold uppercase tracking-wider text-[11px] print:text-[7.5pt] print:bg-slate-200">
-                        <th class="py-3 px-3.5 print:py-1.5 print:px-2 text-center" style="width: 50px;">No</th>
+                        <th class="py-3 px-3.5 print:py-1.5 print:px-2 text-center w-[50px]">No</th>
                         <th class="py-3 px-3.5 print:py-1.5 print:px-2">Nama Produk / Material &amp; SKU</th>
                         <th class="py-3 px-3.5 print:py-1.5 print:px-2 text-center">Volume Terjual</th>
                         <th class="py-3 px-3.5 print:py-1.5 print:px-2 text-right">Pendapatan Jual</th>

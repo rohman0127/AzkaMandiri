@@ -131,7 +131,6 @@
     <!-- MODAL: Tambah Halaman Statis -->
     <div x-show="createModal" 
          class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
-         style="display: none;"
          x-cloak>
         <div @click.outside="createModal = false" 
              x-ref="createModalCard"
@@ -208,7 +207,6 @@
     <!-- MODAL: Edit Halaman Statis -->
     <div x-show="editModal" 
          class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
-         style="display: none;"
          x-cloak>
         <div @click.outside="editModal = false" 
              x-ref="editModalCard"
