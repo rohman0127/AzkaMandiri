@@ -42,70 +42,41 @@ jobs:
 
       - name: 📦 Package Application Deployment Archives
         run: |
-          # 1. Prepare Root index.php with auto-extractor
+          # 1. Prepare Root index.php with safe try-catch auto-extractor
           cat << 'EOF' > index.php
           <?php
-          $zips = ['core.zip', 'public.zip', 'vendor_addons.zip', 'vendor.zip'];
-          $needsExtract = false;
-          foreach ($zips as $z) {
-              if (file_exists(__DIR__ . '/' . $z)) {
-                  $needsExtract = true;
-                  break;
-              }
-          }
-          if ($needsExtract) {
-              @set_time_limit(300);
+          try {
+              $zips = ['core.zip', 'public.zip', 'vendor_addons.zip', 'vendor.zip'];
+              $needsExtract = false;
               foreach ($zips as $z) {
-                  $zipPath = __DIR__ . '/' . $z;
-                  if (file_exists($zipPath)) {
-                      $zip = new ZipArchive();
-                      if ($zip->open($zipPath) === true) {
-                          $zip->extractTo(__DIR__);
-                          $zip->close();
-                          @unlink($zipPath);
-                      }
+                  if (file_exists(__DIR__ . '/' . $z)) {
+                      $needsExtract = true;
+                      break;
                   }
               }
-              // Clear caches
-              $views = glob(__DIR__ . '/storage/framework/views/*.php');
-              if ($views) {
-                  foreach ($views as $vf) {
-                      @unlink($vf);
-                  }
-              }
-              @unlink(__DIR__ . '/bootstrap/cache/config.php');
-              @unlink(__DIR__ . '/bootstrap/cache/routes-v7.php');
-
-              // Automatically sync uploaded media from storage/app/public into public/storage
-              $srcStorage = __DIR__ . '/storage/app/public';
-              $dstStorage = __DIR__ . '/public/storage';
-              if (is_dir($srcStorage)) {
-                  if (!is_dir($dstStorage)) {
-                      @mkdir($dstStorage, 0777, true);
-                  }
-                  $iter = new RecursiveIteratorIterator(
-                      new RecursiveDirectoryIterator($srcStorage, RecursiveDirectoryIterator::SKIP_DOTS),
-                      RecursiveIteratorIterator::SELF_FIRST
-                  );
-                  foreach ($iter as $file) {
-                      $sub = $iter->getSubPathName();
-                      $targetFile = $dstStorage . '/' . $sub;
-                      if ($file->isDir()) {
-                          if (!is_dir($targetFile)) {
-                              @mkdir($targetFile, 0777, true);
-                          }
-                      } else {
-                          if (!file_exists($targetFile) || filemtime($file) > filemtime($targetFile)) {
-                              $pDir = dirname($targetFile);
-                              if (!is_dir($pDir)) {
-                                  @mkdir($pDir, 0777, true);
-                              }
-                              @copy($file->getPathname(), $targetFile);
+              if ($needsExtract && class_exists('ZipArchive')) {
+                  @set_time_limit(300);
+                  foreach ($zips as $z) {
+                      $zipPath = __DIR__ . '/' . $z;
+                      if (file_exists($zipPath)) {
+                          $zip = new ZipArchive();
+                          if ($zip->open($zipPath) === true) {
+                              $zip->extractTo(__DIR__);
+                              $zip->close();
+                              @unlink($zipPath);
                           }
                       }
                   }
+                  // Remove stale bootstrap caches
+                  @unlink(__DIR__ . '/bootstrap/cache/config.php');
+                  @unlink(__DIR__ . '/bootstrap/cache/routes-v7.php');
+                  @unlink(__DIR__ . '/bootstrap/cache/services.php');
+                  @unlink(__DIR__ . '/bootstrap/cache/packages.php');
               }
+          } catch (\Throwable $e) {
+              error_log("Deploy extract notice: " . $e->getMessage());
           }
+
           require __DIR__ . '/public/index.php';
           EOF
 
@@ -118,8 +89,8 @@ jobs:
           </IfModule>
           EOF
 
-          # 3. Create core.zip (Laravel core code without vendor or node_modules)
-          zip -r -q core.zip app bootstrap config database resources routes artisan composer.json composer.lock
+          # 3. Create core.zip (Laravel core code without vendor, node_modules, or stale cache)
+          zip -r -q core.zip app bootstrap config database resources routes artisan composer.json composer.lock -x "bootstrap/cache/*.php"
 
           # 4. Create public.zip (compiled Vite build assets, public icons, images - excluding storage)
           zip -r -q public.zip public/ -x "public/storage/*"
@@ -147,10 +118,6 @@ jobs:
           # Upload index.php
           echo "Uploading index.php..."
           curl -s --ftp-pasv -T index.php -u "$FTP_USER:$FTP_PASS" "$REMOTE_BASE/index.php"
-
-          # Upload public/index.php
-          echo "Uploading public/index.php..."
-          curl -s --ftp-pasv -T public/index.php -u "$FTP_USER:$FTP_PASS" "$REMOTE_BASE/public/index.php"
 
           # Upload .htaccess
           echo "Uploading .htaccess..."
