@@ -12,9 +12,9 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    name: Build & FTP Deploy
+    name: Build & Deploy to InfinityFree
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - name: 📥 Checkout Repository
@@ -35,24 +35,51 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: 📦 Install Composer Dependencies
-        run: |
-          composer install --no-dev --prefer-dist --optimize-autoloader --no-progress --no-interaction
-
       - name: 🎨 Install NPM & Build Vite Assets
         run: |
           npm ci || npm install
           npm run build
 
-      - name: ⚙️ Prepare InfinityFree Root Routing
+      - name: 📦 Package Application Deployment Archives
         run: |
-          # 1. Root index.php that points to public/index.php
+          # 1. Prepare Root index.php with auto-extractor
           cat << 'EOF' > index.php
           <?php
+          $zips = ['core.zip', 'public.zip', 'vendor_addons.zip', 'vendor.zip'];
+          $needsExtract = false;
+          foreach ($zips as $z) {
+              if (file_exists(__DIR__ . '/' . $z)) {
+                  $needsExtract = true;
+                  break;
+              }
+          }
+          if ($needsExtract) {
+              @set_time_limit(300);
+              foreach ($zips as $z) {
+                  $zipPath = __DIR__ . '/' . $z;
+                  if (file_exists($zipPath)) {
+                      $zip = new ZipArchive();
+                      if ($zip->open($zipPath) === true) {
+                          $zip->extractTo(__DIR__);
+                          $zip->close();
+                          @unlink($zipPath);
+                      }
+                  }
+              }
+              // Clear caches
+              $views = glob(__DIR__ . '/storage/framework/views/*.php');
+              if ($views) {
+                  foreach ($views as $vf) {
+                      @unlink($vf);
+                  }
+              }
+              @unlink(__DIR__ . '/bootstrap/cache/config.php');
+              @unlink(__DIR__ . '/bootstrap/cache/routes-v7.php');
+          }
           require __DIR__ . '/public/index.php';
           EOF
 
-          # 2. Root .htaccess to route all traffic to public/
+          # 2. Prepare Root .htaccess
           cat << 'EOF' > .htaccess
           <IfModule mod_rewrite.c>
               RewriteEngine On
@@ -61,44 +88,44 @@ jobs:
           </IfModule>
           EOF
 
-          # 3. Ensure storage folders exist with open permissions
-          mkdir -p storage/app/public
-          mkdir -p storage/framework/cache/data
-          mkdir -p storage/framework/sessions
-          mkdir -p storage/framework/views
-          mkdir -p storage/logs
-          mkdir -p bootstrap/cache
-          chmod -R 775 storage bootstrap/cache
+          # 3. Create core.zip (Laravel core code without vendor or node_modules)
+          zip -r -q core.zip app bootstrap config database resources routes artisan composer.json composer.lock
 
-      - name: 🚀 Deploy via FTP to InfinityFree
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER != '' && secrets.FTP_SERVER || 'ftpupload.net' }}
-          username: ${{ secrets.FTP_USERNAME != '' && secrets.FTP_USERNAME || 'if0_42986792' }}
-          password: ${{ secrets.FTP_PASSWORD != '' && secrets.FTP_PASSWORD || 'bO9CcHQMU0fgG' }}
-          server-dir: azkamandiri.nichesite.org/htdocs/
-          protocol: ftp
-          port: 21
-          dry-run: false
-          log-level: standard
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            vendor/**
-            **/vendor/**
-            **/tests/**
-            .env
-            .env.example
-            .env.backup
-            .env.production
-            storage/logs/**
-            storage/framework/sessions/**
-            storage/framework/cache/**
-            storage/framework/views/**
-            *.zip
-            *.sql
-            DOKUMENTASI_TEKNIS_DAN_SERVER_AZKAMANDIRI.pdf
-            phpunit.xml
-            README.md
+          # 4. Create public.zip (compiled Vite build assets, public icons, images)
+          zip -r -q public.zip public/
 
+          echo "Deployment packages successfully created:"
+          ls -lh core.zip public.zip index.php .htaccess
+
+      - name: 🚀 Upload Packages to InfinityFree via FTP
+        run: |
+          FTP_SERVER="${{ secrets.FTP_SERVER != '' && secrets.FTP_SERVER || 'ftpupload.net' }}"
+          FTP_USER="${{ secrets.FTP_USERNAME != '' && secrets.FTP_USERNAME || 'if0_42986792' }}"
+          FTP_PASS="${{ secrets.FTP_PASSWORD != '' && secrets.FTP_PASSWORD || 'bO9CcHQMU0fgG' }}"
+          REMOTE_BASE="ftp://$FTP_SERVER/azkamandiri.nichesite.org/htdocs"
+
+          echo "🚀 Uploading deployment packages to InfinityFree..."
+          
+          # Upload core.zip
+          echo "Uploading core.zip..."
+          curl -s --ftp-pasv -T core.zip -u "$FTP_USER:$FTP_PASS" "$REMOTE_BASE/core.zip"
+          
+          # Upload public.zip
+          echo "Uploading public.zip..."
+          curl -s --ftp-pasv -T public.zip -u "$FTP_USER:$FTP_PASS" "$REMOTE_BASE/public.zip"
+          
+          # Upload index.php
+          echo "Uploading index.php..."
+          curl -s --ftp-pasv -T index.php -u "$FTP_USER:$FTP_PASS" "$REMOTE_BASE/index.php"
+
+          # Upload .htaccess
+          echo "Uploading .htaccess..."
+          curl -s --ftp-pasv -T .htaccess -u "$FTP_USER:$FTP_PASS" "$REMOTE_BASE/.htaccess"
+
+          echo "✅ All packages deployed successfully to InfinityFree!"
+
+      - name: 🌐 Ping Server to Trigger Unpack
+        run: |
+          echo "Triggering application unpack on InfinityFree..."
+          curl -s -m 10 "http://azkamandiri.nichesite.org/" || true
+          echo "Deployment complete!"
