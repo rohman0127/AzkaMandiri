@@ -8,13 +8,13 @@ on:
 
 concurrency:
   group: deploy-infinityfree
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
     name: Build & FTP Deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
 
     steps:
       - name: 📥 Checkout Repository
@@ -85,6 +85,8 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
+            vendor/**
+            **/vendor/**
             **/tests/**
             .env
             .env.example
