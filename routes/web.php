@@ -200,3 +200,40 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::resource('roles', AdminRoleController::class);
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Production Server Maintenance & Migration Sync Route
+|--------------------------------------------------------------------------
+*/
+Route::get('/deploy-sync', function () {
+    if (request('token') !== 'azkamandiri-deploy-secret-2026') {
+        abort(403, 'Unauthorized access key.');
+    }
+
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $migrate = \Illuminate\Support\Facades\Artisan::output();
+
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        $seed = \Illuminate\Support\Facades\Artisan::output();
+
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        $clear = \Illuminate\Support\Facades\Artisan::output();
+
+        @file_put_contents(storage_path('framework/installed.lock'), date('Y-m-d H:i:s'));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Migrate, Seed & Cache Clear successfully executed on production server.',
+            'migrate' => $migrate,
+            'seed' => $seed,
+            'clear' => $clear,
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+});

@@ -24,6 +24,19 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
+        // Auto-migrate & seed on initial production deployment
+        if (app()->environment('production') && !file_exists(storage_path('framework/installed.lock'))) {
+            try {
+                if (!Schema::hasTable('roles') || \App\Models\User::count() === 0) {
+                    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+                    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+                }
+                @file_put_contents(storage_path('framework/installed.lock'), date('Y-m-d H:i:s'));
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Auto-migration error: ' . $e->getMessage());
+            }
+        }
+
         // Native Gate Integration for Dynamic Permissions
         Gate::before(function ($user, $ability) {
             if (isset($user->is_active) && !$user->is_active) {

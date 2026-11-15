@@ -1,0 +1,103 @@
+name: Auto Deploy to InfinityFree
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-infinityfree
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    name: Build & FTP Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🐘 Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, dom, gd, zip, bcmath
+          coverage: none
+
+      - name: 🟢 Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Install Composer Dependencies
+        run: |
+          composer install --no-dev --prefer-dist --optimize-autoloader --no-progress --no-interaction
+
+      - name: 🎨 Install NPM & Build Vite Assets
+        run: |
+          npm ci || npm install
+          npm run build
+
+      - name: ⚙️ Prepare InfinityFree Root Routing
+        run: |
+          # 1. Root index.php that points to public/index.php
+          cat << 'EOF' > index.php
+          <?php
+          require __DIR__ . '/public/index.php';
+          EOF
+
+          # 2. Root .htaccess to route all traffic to public/
+          cat << 'EOF' > .htaccess
+          <IfModule mod_rewrite.c>
+              RewriteEngine On
+              RewriteCond %{REQUEST_URI} !^/public/
+              RewriteRule ^(.*)$ public/$1 [L]
+          </IfModule>
+          EOF
+
+          # 3. Ensure storage folders exist with open permissions
+          mkdir -p storage/app/public
+          mkdir -p storage/framework/cache/data
+          mkdir -p storage/framework/sessions
+          mkdir -p storage/framework/views
+          mkdir -p storage/logs
+          mkdir -p bootstrap/cache
+          chmod -R 775 storage bootstrap/cache
+
+      - name: 🚀 Deploy via FTP to InfinityFree
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER != '' && secrets.FTP_SERVER || 'ftpupload.net' }}
+          username: ${{ secrets.FTP_USERNAME != '' && secrets.FTP_USERNAME || 'if0_42986792' }}
+          password: ${{ secrets.FTP_PASSWORD != '' && secrets.FTP_PASSWORD || 'bO9CcHQMU0fgG' }}
+          server-dir: azkamandiri.nichesite.org/htdocs/
+          protocol: ftp
+          port: 21
+          passive: true
+          dry-run: false
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            .env
+            .env.example
+            .env.backup
+            .env.production
+            storage/logs/**
+            storage/framework/sessions/**
+            storage/framework/cache/**
+            storage/framework/views/**
+            *.zip
+            *.sql
+            DOKUMENTASI_TEKNIS_DAN_SERVER_AZKAMANDIRI.pdf
+            phpunit.xml
+            README.md
+

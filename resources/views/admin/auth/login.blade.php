@@ -57,7 +57,7 @@
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400">
                             <i data-lucide="mail" class="w-4 h-4"></i>
                         </span>
-                        <input type="email" id="email" name="email" value="{{ old('email', 'admin@azkamandiri.com') }}" required autofocus
+                        <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required autofocus
                             class="w-full pl-10 pr-4 py-2.5 bg-[#101D33]/80 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#D6A84F] focus:ring-1 focus:ring-[#D6A84F] transition text-sm">
                     </div>
                 </div>
@@ -99,25 +99,6 @@
                     <span>Masuk ke Panel Admin</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
-
-                <!-- Default Credentials Card -->
-                <div class="mt-4 p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-300">
-                    <div class="flex items-center justify-between mb-1.5">
-                        <span class="font-bold text-[#D6A84F] flex items-center gap-1.5">
-                            <i data-lucide="key-round" class="w-3.5 h-3.5"></i>
-                            <span>Akun Administrator Default</span>
-                        </span>
-                        <button type="button" 
-                                onclick="document.getElementById('email').value='admin@azkamandiri.com'; document.getElementById('password').value='Password123!';" 
-                                class="text-[11px] text-[#D6A84F] hover:text-[#e0b45b] hover:underline font-semibold cursor-pointer">
-                            Isi Otomatis
-                        </button>
-                    </div>
-                    <div class="space-y-0.5 text-[11px] text-slate-300 font-mono">
-                        <div>Email: <span class="text-white">admin@azkamandiri.com</span></div>
-                        <div>Password: <span class="text-white">Password123!</span> <span class="text-slate-400 font-sans text-[10px]">(atau password)</span></div>
-                    </div>
-                </div>
             </form>
 
             <div class="mt-8 pt-6 border-t border-white/10 text-center">
