@@ -161,6 +161,31 @@
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num || 0);
     },
 
+    submitTransaction(event) {
+        if (this.cart.length === 0) {
+            if (window.AzkaAlert) {
+                window.AzkaAlert.warning('Keranjang Kosong', 'Pilih minimal satu produk untuk diproses.');
+            } else if (typeof Swal !== 'undefined') {
+                Swal.fire({ icon: 'warning', title: 'Keranjang Kosong', text: 'Pilih minimal satu produk untuk diproses.', confirmButtonColor: '#D6A84F' });
+            } else {
+                alert('Pilih minimal 1 produk untuk diproses.');
+            }
+            return;
+        }
+
+        if (this.isSubmitting) {
+            return;
+        }
+
+        this.isSubmitting = true;
+        if (window.AzkaLoading) window.AzkaLoading.start();
+
+        const form = document.getElementById('posCheckoutForm');
+        if (form) {
+            form.submit();
+        }
+    },
+
     saveQuickCustomer() {
         if (!this.newCustomer.name) {
             if (window.AzkaAlert) {
@@ -224,6 +249,22 @@
             </a>
         </div>
     </div>
+
+    @if(session('error') || $errors->any())
+        <div class="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-3">
+            <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0 text-red-500"></i>
+            <div>
+                <p class="font-bold">{{ session('error') ?? 'Validasi Transaksi Gagal' }}</p>
+                @if($errors->any())
+                    <ul class="list-disc pl-4 mt-1 space-y-0.5">
+                        @foreach($errors->all() as $err)
+                            <li>{{ $err }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </div>
+    @endif
 
     <!-- Main POS Grid Layout (Left: Catalog, Right: Cart) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
@@ -304,7 +345,7 @@
         <!-- RIGHT: Cart Drawer & Checkout Panel (5 Cols) -->
         <div class="lg:col-span-5 bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 space-y-4 sticky top-4">
             
-            <form action="{{ route('admin.pos.store') }}" method="POST" id="posCheckoutForm">
+            <form action="{{ route('admin.pos.store') }}" method="POST" id="posCheckoutForm" @submit.prevent="submitTransaction($event)">
                 @csrf
 
                 <!-- Cart Header & Customer Picker -->
@@ -509,9 +550,9 @@
                     </div>
 
                     <!-- Checkout CTA Button -->
-                    <button type="submit" 
+                    <button type="button" 
                             :disabled="cart.length === 0 || isSubmitting"
-                            @click="if(cart.length > 0) { isSubmitting = true; if(window.AzkaLoading) window.AzkaLoading.start(); }"
+                            @click="submitTransaction($event)"
                             class="w-full py-3.5 px-4 rounded-xl bg-[#D6A84F] hover:bg-[#c4963e] disabled:opacity-50 disabled:cursor-not-allowed text-[#101D33] font-extrabold text-sm transition shadow-sm flex items-center justify-center gap-2 cursor-pointer">
                         <template x-if="!isSubmitting">
                             <span class="flex items-center gap-2">

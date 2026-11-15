@@ -70,6 +70,10 @@ class PosController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->has('customer_id') && ($request->customer_id === '' || $request->customer_id === 'null')) {
+            $request->merge(['customer_id' => null]);
+        }
+
         $validated = $request->validate([
             'customer_id' => 'nullable|exists:customers,id',
             'order_type' => 'required|in:retail,project_custom',
@@ -90,8 +94,9 @@ class PosController extends Controller
             // 1. Stock Validation
             foreach ($validated['items'] as $item) {
                 $product = Product::lockForUpdate()->find($item['product_id']);
+                $unitSymbol = $product->unit->symbol ?? $product->unit->name ?? 'item';
                 if ($product->type === 'standard' && (float)$product->stock < (float)$item['quantity']) {
-                    return back()->withInput()->with('error', "Stok untuk '{$product->name}' tidak mencukupi! Tersedia: {$product->stock} {$product->unit->symbol}, Diminta: {$item['quantity']}.");
+                    return back()->withInput()->with('error', "Stok untuk '{$product->name}' tidak mencukupi! Tersedia: {$product->stock} {$unitSymbol}, Diminta: {$item['quantity']}.");
                 }
             }
 
@@ -185,7 +190,7 @@ class PosController extends Controller
             return redirect()->route('admin.pos.show', $transaction->id)
                 ->with('success', "Transaksi berhasil diproses dengan nomor nota {$transaction->invoice_code}.")
                 ->with('new_transaction_id', $transaction->id);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Terjadi kesalahan saat memproses transaksi: ' . $e->getMessage());
         }
