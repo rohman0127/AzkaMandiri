@@ -67,11 +67,9 @@ jobs:
                           }
                       }
                   }
-                  // Remove stale bootstrap caches
+                  // Remove stale bootstrap caches (config & routes only)
                   @unlink(__DIR__ . '/bootstrap/cache/config.php');
                   @unlink(__DIR__ . '/bootstrap/cache/routes-v7.php');
-                  @unlink(__DIR__ . '/bootstrap/cache/services.php');
-                  @unlink(__DIR__ . '/bootstrap/cache/packages.php');
               }
           } catch (\Throwable $e) {
               error_log("Deploy extract notice: " . $e->getMessage());
