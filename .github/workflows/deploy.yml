@@ -8,13 +8,13 @@ on:
 
 concurrency:
   group: deploy-infinityfree
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
     name: Build & FTP Deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
 
     steps:
       - name: 📥 Checkout Repository
@@ -79,7 +79,6 @@ jobs:
           server-dir: azkamandiri.nichesite.org/htdocs/
           protocol: ftp
           port: 21
-          passive: true
           dry-run: false
           log-level: standard
           exclude: |
