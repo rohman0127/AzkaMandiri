@@ -17,6 +17,17 @@ trait HandlesImageUploads
         $safeName = Str::random(24) . '_' . time() . '.' . $extension;
         $path = $file->storeAs($folder, $safeName, 'public');
 
+        // Also mirror directly to public/storage for seamless static serving on shared hosts without symlinks
+        try {
+            $destDir = public_path('storage/' . $folder);
+            if (!is_dir($destDir)) {
+                @mkdir($destDir, 0777, true);
+            }
+            @copy(storage_path('app/public/' . $path), public_path('storage/' . $path));
+        } catch (\Throwable $e) {
+            // Silently allow fallback route to serve if filesystem permission prevents copying
+        }
+
         return '/storage/' . $path;
     }
 
@@ -34,6 +45,11 @@ trait HandlesImageUploads
 
         if (Storage::disk('public')->exists($cleanPath)) {
             Storage::disk('public')->delete($cleanPath);
+        }
+
+        $publicCopy = public_path('storage/' . $cleanPath);
+        if (file_exists($publicCopy)) {
+            @unlink($publicCopy);
         }
     }
 }

@@ -75,6 +75,36 @@ jobs:
               }
               @unlink(__DIR__ . '/bootstrap/cache/config.php');
               @unlink(__DIR__ . '/bootstrap/cache/routes-v7.php');
+
+              // Automatically sync uploaded media from storage/app/public into public/storage
+              $srcStorage = __DIR__ . '/storage/app/public';
+              $dstStorage = __DIR__ . '/public/storage';
+              if (is_dir($srcStorage)) {
+                  if (!is_dir($dstStorage)) {
+                      @mkdir($dstStorage, 0777, true);
+                  }
+                  $iter = new RecursiveIteratorIterator(
+                      new RecursiveDirectoryIterator($srcStorage, RecursiveDirectoryIterator::SKIP_DOTS),
+                      RecursiveIteratorIterator::SELF_FIRST
+                  );
+                  foreach ($iter as $file) {
+                      $sub = $iter->getSubPathName();
+                      $targetFile = $dstStorage . '/' . $sub;
+                      if ($file->isDir()) {
+                          if (!is_dir($targetFile)) {
+                              @mkdir($targetFile, 0777, true);
+                          }
+                      } else {
+                          if (!file_exists($targetFile) || filemtime($file) > filemtime($targetFile)) {
+                              $pDir = dirname($targetFile);
+                              if (!is_dir($pDir)) {
+                                  @mkdir($pDir, 0777, true);
+                              }
+                              @copy($file->getPathname(), $targetFile);
+                          }
+                      }
+                  }
+              }
           }
           require __DIR__ . '/public/index.php';
           EOF
@@ -91,8 +121,8 @@ jobs:
           # 3. Create core.zip (Laravel core code without vendor or node_modules)
           zip -r -q core.zip app bootstrap config database resources routes artisan composer.json composer.lock
 
-          # 4. Create public.zip (compiled Vite build assets, public icons, images)
-          zip -r -q public.zip public/
+          # 4. Create public.zip (compiled Vite build assets, public icons, images - excluding storage)
+          zip -r -q public.zip public/ -x "public/storage/*"
 
           echo "Deployment packages successfully created:"
           ls -lh core.zip public.zip index.php .htaccess

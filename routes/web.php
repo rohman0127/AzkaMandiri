@@ -203,8 +203,33 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
 /*
 |--------------------------------------------------------------------------
+| Storage Asset Fallback Route (Shared Hosting / No Symlinks)
+|--------------------------------------------------------------------------
+| Directly serves uploaded files from storage/app/public/ when Apache falls
+| back to index.php because public/storage is not a symlink.
+*/
+Route::get('/storage/{path}', function (string $path) {
+    // Sanitize path against directory traversal
+    $cleanPath = str_replace(['..', "\0"], '', $path);
+    $fullPath = storage_path('app/public/' . $cleanPath);
+
+    if (!file_exists($fullPath) || is_dir($fullPath)) {
+        abort(404);
+    }
+
+    $mime = mime_content_type($fullPath) ?: 'application/octet-stream';
+
+    return response()->file($fullPath, [
+        'Content-Type' => $mime,
+        'Cache-Control' => 'public, max-age=31536000, immutable',
+    ]);
+})->where('path', '.*')->name('storage.local');
+
+/*
+|--------------------------------------------------------------------------
 | Production Server Maintenance & Migration Sync Route
 |--------------------------------------------------------------------------
+| NOTE: Never re-seeds data to preserve real production database records.
 */
 Route::get('/deploy-sync', function () {
     if (request('token') !== 'azkamandiri-deploy-secret-2026') {
@@ -212,22 +237,12 @@ Route::get('/deploy-sync', function () {
     }
 
     try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        $migrate = \Illuminate\Support\Facades\Artisan::output();
-
-        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-        $seed = \Illuminate\Support\Facades\Artisan::output();
-
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         $clear = \Illuminate\Support\Facades\Artisan::output();
 
-        @file_put_contents(storage_path('framework/installed.lock'), date('Y-m-d H:i:s'));
-
         return response()->json([
             'status' => 'success',
-            'message' => 'Migrate, Seed & Cache Clear successfully executed on production server.',
-            'migrate' => $migrate,
-            'seed' => $seed,
+            'message' => 'Cache Clear successfully executed on production server.',
             'clear' => $clear,
         ]);
     } catch (\Throwable $e) {
