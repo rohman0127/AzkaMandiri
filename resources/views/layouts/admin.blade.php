@@ -491,25 +491,11 @@
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
         <!-- Topbar -->
-        <header class="h-20 bg-white border-b border-slate-200/90 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 shadow-xs">
-            <div class="flex items-center gap-3 sm:gap-5 min-w-0">
+        <header class="h-16 sm:h-20 bg-white border-b border-slate-200/90 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 shadow-xs">
+            <div class="flex items-center gap-3 sm:gap-4 min-w-0">
                 <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition shrink-0" aria-label="Buka Menu">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
-
-                <!-- Brand Badge on Navbar (Logo berdampingan di sebelah kiri teks "Azka Mandiri") -->
-                <div class="flex items-center gap-2.5 sm:gap-3 shrink-0 py-1 pr-3 sm:pr-4 sm:border-r border-slate-200">
-                    <div class="h-9 w-11 sm:h-10 sm:w-12 rounded-xl bg-slate-50 border border-slate-200/80 p-1 flex items-center justify-center shrink-0 shadow-xs">
-                        <img src="{{ asset('assets/brand/azka-logo-icon.png') }}" alt="Azka Mandiri Logo" class="max-h-full max-w-full object-contain">
-                    </div>
-                    <div class="leading-tight">
-                        <div class="flex items-center gap-1.5">
-                            <span class="font-serif font-black text-[#1B2E56] text-sm sm:text-base tracking-wide leading-none">Azka Mandiri</span>
-                            <span class="hidden md:inline-flex items-center px-1.5 py-0.2 text-[9px] font-bold uppercase rounded bg-rose-50 text-[#A81B3E] border border-rose-200">POS</span>
-                        </div>
-                        <span class="block text-[9.5px] text-[#A81B3E] font-bold uppercase tracking-wider mt-0.5">Aluminium &amp; Kaca</span>
-                    </div>
-                </div>
 
                 <!-- Page Breadcrumbs & Current Page Title -->
                 <div class="min-w-0">

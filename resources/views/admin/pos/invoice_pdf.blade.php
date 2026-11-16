@@ -202,19 +202,26 @@
 </head>
 <body>
 
+    @php
+        $logoPath = public_path('assets/brand/azka-logo-icon.png');
+        $logoBase64 = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : '';
+    @endphp
+
     <!-- Header -->
     <table class="header-table">
         <tr>
-            <td style="width: 58%;">
+            <td style="width: 58%; vertical-align: top;">
                 <table style="width: 100%;">
                     <tr>
-                        <td style="width: 58px; vertical-align: top; padding-right: 10px;">
-                            <img src="{{ public_path('assets/brand/azka-logo-icon.png') }}" style="height: 52px; width: auto;" alt="Logo Azka Mandiri">
+                        @if($logoBase64)
+                        <td style="width: 58px; vertical-align: top; padding-right: 12px;">
+                            <img src="{{ $logoBase64 }}" style="height: 52px; width: auto;" alt="Logo Azka Mandiri">
                         </td>
+                        @endif
                         <td style="vertical-align: top;">
-                            <div class="company-name" style="color: #1b2e56; font-family: 'Times New Roman', serif; font-size: 20px; letter-spacing: 0.8px;">AZKA MANDIRI</div>
-                            <div class="company-sub" style="color: #a81b3e; font-weight: bold; font-size: 9.5px; letter-spacing: 0.5px;">SPESIALIS ALUMINIUM, KACA &amp; INTERIOR</div>
-                            <div class="company-contact" style="font-size: 9px; color: #64748b; line-height: 1.35; margin-top: 3px;">
+                            <div class="company-name" style="color: #1b2e56; font-family: 'Times New Roman', serif; font-size: 21px; font-weight: bold; letter-spacing: 0.8px; line-height: 1.1;">AZKA MANDIRI</div>
+                            <div class="company-sub" style="color: #a81b3e; font-weight: bold; font-size: 9.5px; letter-spacing: 0.5px; margin-top: 2px;">SPESIALIS ALUMINIUM, KACA &amp; INTERIOR</div>
+                            <div class="company-contact" style="font-size: 8.5px; color: #64748b; line-height: 1.35; margin-top: 3px;">
                                 Jl. Pondok Serut, Paku Jaya, Kec. Serpong Utara<br>
                                 Kota Tangerang Selatan, Banten 15220<br>
                                 Telp / WhatsApp: +62 819-3273-5383 &bull; Email: kontak@azkamandiri.com

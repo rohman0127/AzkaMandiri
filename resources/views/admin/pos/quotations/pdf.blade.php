@@ -74,9 +74,10 @@
 
         /* Divider Gold & Navy */
         .divider-bar {
-            height: 3px;
-            background-color: #d97706;
-            margin: 14px 0 16px 0;
+            height: 2.5px;
+            background-color: #1b2e56;
+            border-bottom: 1.5px solid #a81b3e;
+            margin: 12px 0 16px 0;
         }
 
         /* Info Boxes */
@@ -218,33 +219,40 @@
 </head>
 <body>
 
+    @php
+        $logoPath = public_path('assets/brand/azka-logo-icon.png');
+        $logoBase64 = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : '';
+    @endphp
+
     <!-- Header Section -->
     <table class="header-table">
         <tr>
-            <td style="width: 58%;">
+            <td style="width: 58%; vertical-align: top;">
                 <table style="width: 100%;">
                     <tr>
-                        <td style="width: 56px; vertical-align: top; padding-right: 10px;">
-                            <img src="{{ public_path('assets/brand/azka-logo-icon.png') }}" style="height: 50px; width: auto;" alt="Logo Azka Mandiri">
+                        @if($logoBase64)
+                        <td style="width: 58px; vertical-align: top; padding-right: 12px;">
+                            <img src="{{ $logoBase64 }}" style="height: 52px; width: auto;" alt="Logo Azka Mandiri">
                         </td>
+                        @endif
                         <td style="vertical-align: top;">
-                            <div class="company-name" style="color: #1b2e56; font-family: 'Times New Roman', serif; font-size: 20px; letter-spacing: 0.8px;">{{ setting('company_name', 'AZKA MANDIRI') }}</div>
-                            <div class="company-sub" style="color: #a81b3e; font-weight: bold; font-size: 9.5px; letter-spacing: 0.5px;">SPESIALIS ALUMINIUM, KACA &amp; FABRIKASI INTERIOR</div>
-                            <div class="company-contact" style="font-size: 9px; color: #64748b; line-height: 1.35; margin-top: 3px;">
-                                {{ setting('company_address', 'Jl. Pondok Serut, Paku Jaya, Kec. Serpong Utara, Kota Tangerang Selatan, Banten 15220') }}<br>
-                                Telepon / WhatsApp: {{ setting('company_phone', '0819-3273-5383') }} &bull; Email: {{ setting('company_email', 'kontak@azkamandiri.com') }}
+                            <div class="company-name" style="color: #1b2e56; font-family: 'Times New Roman', serif; font-size: 21px; font-weight: bold; letter-spacing: 0.8px; line-height: 1.1;">{{ setting('company_name', setting('site_name', 'AZKA MANDIRI')) }}</div>
+                            <div class="company-sub" style="color: #a81b3e; font-weight: bold; font-size: 9.5px; letter-spacing: 0.5px; margin-top: 2px;">SPESIALIS ALUMINIUM, KACA &amp; FABRIKASI INTERIOR</div>
+                            <div class="company-contact" style="font-size: 8.5px; color: #64748b; line-height: 1.35; margin-top: 3px;">
+                                {{ setting('company_address', setting('address', 'Jl. Pondok Serut, Paku Jaya, Kec. Serpong Utara, Kota Tangerang Selatan, Banten 15220')) }}<br>
+                                Telepon / WhatsApp: {{ setting('company_phone', setting('phone_number', '+62 819-3273-5383')) }} &bull; Email: {{ setting('company_email', setting('email', 'kontak@azkamandiri.com')) }}
                             </div>
                         </td>
                     </tr>
                 </table>
             </td>
-            <td style="width: 42%;">
-                <div class="doc-title" style="color: #1b2e56;">PENAWARAN HARGA</div>
-                <div class="doc-subtitle">Price Quotation / Sales Proposal</div>
+            <td style="width: 42%; vertical-align: top;">
+                <div class="doc-title" style="color: #1b2e56; font-size: 20px; font-weight: bold; letter-spacing: 0.8px; text-align: right;">PENAWARAN HARGA</div>
+                <div class="doc-subtitle" style="font-size: 8.5px; color: #a81b3e; font-weight: bold; text-align: right; text-transform: uppercase; letter-spacing: 1px; margin-top: 1px;">PRICE QUOTATION / SALES PROPOSAL</div>
                 <table class="doc-meta" style="margin-left: auto; width: 95%;">
                     <tr>
                         <td class="text-right font-bold" style="width: 45%;">No. Penawaran :</td>
-                        <td class="text-right font-bold" style="color: #0f172a;">{{ $quotation->quotation_number }}</td>
+                        <td class="text-right font-bold" style="color: #1b2e56;">{{ $quotation->quotation_number }}</td>
                     </tr>
                     <tr>
                         <td class="text-right" style="color: #64748b;">Tanggal :</td>
@@ -252,11 +260,11 @@
                     </tr>
                     <tr>
                         <td class="text-right" style="color: #64748b;">Berlaku Sampai :</td>
-                        <td class="text-right font-bold" style="color: #b45309;">{{ $quotation->valid_until ? $quotation->valid_until->translatedFormat('d F Y') : '-' }}</td>
+                        <td class="text-right font-bold" style="color: #a81b3e;">{{ $quotation->valid_until ? $quotation->valid_until->translatedFormat('d F Y') : '-' }}</td>
                     </tr>
                     <tr>
                         <td class="text-right" style="color: #64748b;">Estimator / Petugas :</td>
-                        <td class="text-right">{{ $quotation->creator->name ?? 'Tim Estimator' }}</td>
+                        <td class="text-right">{{ $quotation->creator->name ?? 'Administrator AzkaMandiri' }}</td>
                     </tr>
                 </table>
             </td>

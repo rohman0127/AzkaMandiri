@@ -194,15 +194,22 @@
 </head>
 <body>
 
+    @php
+        $logoPath = public_path('assets/brand/azka-logo-icon.png');
+        $logoBase64 = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : '';
+    @endphp
+
     <!-- Kop Surat Resmi -->
     <table class="kop-table">
         <tr>
             <td style="width: 70%;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
+                        @if($logoBase64)
                         <td style="width: 52px; vertical-align: top; padding-right: 10px;">
-                            <img src="{{ public_path('assets/brand/azka-logo-icon.png') }}" style="height: 46px; width: auto;" alt="Logo Azka Mandiri">
+                            <img src="{{ $logoBase64 }}" style="height: 46px; width: auto;" alt="Logo Azka Mandiri">
                         </td>
+                        @endif
                         <td style="vertical-align: top;">
                             <div class="company-title" style="color: #1b2e56; font-family: 'Times New Roman', serif;">AZKA MANDIRI</div>
                             <div class="company-sub" style="color: #a81b3e;">Spesialis Kusen Aluminium, Kaca Tempered, &amp; Proyek Interior</div>

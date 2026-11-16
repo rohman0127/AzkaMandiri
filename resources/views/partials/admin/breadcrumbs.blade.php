@@ -84,6 +84,34 @@
     } elseif ($currentRoute === 'admin.profile.edit') {
         $crumbs[] = ['label' => 'Pengaturan & Profil'];
         $crumbs[] = ['label' => 'Akun Administrator'];
+    } elseif (str_starts_with($currentRoute, 'admin.pos.quotations.')) {
+        $crumbs[] = ['label' => 'Operasional & Kasir'];
+        $crumbs[] = ['label' => 'Penawaran Harga', 'url' => route('admin.pos.quotations.index')];
+        if ($currentRoute === 'admin.pos.quotations.create') {
+            $crumbs[] = ['label' => 'Buat Penawaran Baru'];
+        } elseif ($currentRoute === 'admin.pos.quotations.edit') {
+            $crumbs[] = ['label' => 'Edit Penawaran'];
+        } elseif ($currentRoute === 'admin.pos.quotations.show') {
+            $crumbs[] = ['label' => 'Detail Penawaran'];
+        }
+    } elseif (str_starts_with($currentRoute, 'admin.pos.')) {
+        $crumbs[] = ['label' => 'Operasional & Kasir'];
+        if ($currentRoute === 'admin.pos.index') {
+            $crumbs[] = ['label' => 'Terminal Kasir POS'];
+        } elseif ($currentRoute === 'admin.pos.transactions' || str_starts_with($currentRoute, 'admin.pos.transactions.')) {
+            $crumbs[] = ['label' => 'Riwayat Transaksi', 'url' => route('admin.pos.transactions')];
+        }
+    } elseif (str_starts_with($currentRoute, 'admin.reports.')) {
+        $crumbs[] = ['label' => 'Laporan & Keuangan'];
+        if ($currentRoute === 'admin.reports.sales') {
+            $crumbs[] = ['label' => 'Laporan Penjualan'];
+        } elseif ($currentRoute === 'admin.reports.purchases') {
+            $crumbs[] = ['label' => 'Laporan Pembelian'];
+        } elseif ($currentRoute === 'admin.reports.profit_loss') {
+            $crumbs[] = ['label' => 'Laporan Laba Rugi'];
+        } elseif ($currentRoute === 'admin.reports.stock') {
+            $crumbs[] = ['label' => 'Laporan Valuasi Stok'];
+        }
     }
 @endphp
 

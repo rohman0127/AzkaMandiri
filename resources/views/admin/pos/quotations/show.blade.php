@@ -5,16 +5,9 @@
 @section('content')
 <div class="space-y-6">
 
-    <!-- Top Header & Breadcrumb -->
+    <!-- Top Header & Actions -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-primary transition">Dashboard</a>
-                <span>/</span>
-                <a href="{{ route('admin.pos.quotations.index') }}" class="hover:text-primary transition">Penawaran Harga</a>
-                <span>/</span>
-                <span class="text-slate-800 font-semibold font-mono">{{ $quotation->quotation_number }}</span>
-            </div>
             <div class="flex flex-wrap items-center gap-3">
                 <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight font-mono">
                     {{ $quotation->quotation_number }}

@@ -64,15 +64,22 @@
 </head>
 <body>
 
+    @php
+        $logoPath = public_path('assets/brand/azka-logo-icon.png');
+        $logoBase64 = file_exists($logoPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : '';
+    @endphp
+
     <!-- KOP PERUSAHAAN & HEADER DOKUMEN -->
     <table style="width: 100%; border-collapse: collapse;">
         <tr>
             <td style="vertical-align: top; width: 70%;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
+                        @if($logoBase64)
                         <td style="width: 52px; vertical-align: top; padding-right: 10px;">
-                            <img src="{{ public_path('assets/brand/azka-logo-icon.png') }}" style="height: 46px; width: auto;" alt="Logo Azka Mandiri">
+                            <img src="{{ $logoBase64 }}" style="height: 46px; width: auto;" alt="Logo Azka Mandiri">
                         </td>
+                        @endif
                         <td style="vertical-align: top;">
                             <div style="font-size: 16pt; font-weight: bold; color: #1b2e56; font-family: 'Times New Roman', serif; letter-spacing: 0.5px;">AZKA MANDIRI</div>
                             <div style="font-size: 7.5pt; font-weight: bold; color: #a81b3e; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px;">SPESIALIS KUSEN ALUMINIUM, KACA TEMPERED, &amp; PROYEK INTERIOR</div>
