@@ -92,6 +92,14 @@
         </div>
     </div>
 
+    @php
+        $logoDark = setting('logo_dark_path');
+        if (empty($logoDark) || str_contains($logoDark, 'logo-square') || str_contains($logoDark, 'azka-logo')) {
+            $logoDark = 'assets/brand/logo-horizontal-dark.svg';
+        }
+        $logoDarkUrl = asset(ltrim($logoDark, '/')) . '?v=' . (file_exists(public_path('assets/brand/logo-horizontal-dark.svg')) ? filemtime(public_path('assets/brand/logo-horizontal-dark.svg')) : '4');
+    @endphp
+
     <!-- Main Navigation Bar -->
     <header class="sticky top-0 z-40 transition-all duration-300"
             :class="scrolled ? 'bg-[#172B4D]/95 backdrop-blur-md shadow-lg py-3 border-b border-white/10' : 'bg-[#172B4D] py-4 border-b border-white/5'">
@@ -99,7 +107,7 @@
             <div class="flex items-center justify-between">
                 <!-- Brand Logo -->
                 <a href="{{ route('home') }}" class="flex items-center gap-2 group transition">
-                    <img src="{{ asset(ltrim(setting('logo_dark_path', 'assets/brand/logo-horizontal-dark.svg'), '/')) }}?v=3" 
+                    <img src="{{ $logoDarkUrl }}" 
                          alt="{{ setting('company_name', setting('site_name', 'AZKA MANDIRI')) }}" 
                          class="h-10 sm:h-12 w-auto transition-transform group-hover:scale-102">
                 </a>
@@ -230,7 +238,7 @@
                 <!-- Col 1: Brand Info -->
                 <div class="space-y-4">
                     <a href="{{ route('home') }}" class="inline-block">
-                        <img src="{{ asset(ltrim(setting('logo_dark_path', 'assets/brand/logo-horizontal-dark.svg'), '/')) }}?v=3" 
+                        <img src="{{ $logoDarkUrl }}" 
                              alt="{{ setting('company_name', setting('site_name', 'AZKA MANDIRI')) }}" class="h-10 w-auto">
                     </a>
                     <p class="text-xs text-gray-400 leading-relaxed">
