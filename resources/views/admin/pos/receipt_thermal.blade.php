@@ -160,6 +160,7 @@
     <div class="receipt-container" id="receipt">
         <!-- Store Header -->
         <div class="header text-center">
+            <img src="{{ asset('assets/brand/azka-logo-icon.png') }}" alt="Azka Mandiri Logo" style="height: 38px; width: auto; margin: 0 auto 6px auto; display: block;">
             <h1>AZKA MANDIRI</h1>
             <p class="font-bold">SPESIALIS ALUMINIUM & KACA</p>
             <p>Jl. Pondok Serut, Paku Jaya, Serpong Utara</p>

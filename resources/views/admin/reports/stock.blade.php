@@ -9,11 +9,14 @@
     <div class="print-only">
         <div class="border-b-2 border-slate-900 pb-3 mb-4">
             <div class="flex justify-between items-start">
-                <div>
-                    <h1 class="text-xl font-black tracking-tight text-slate-900 uppercase">AZKA<span class="text-amber-700">MANDIRI</span></h1>
-                    <p class="text-xs font-bold text-slate-700 tracking-wider uppercase mt-0.5">Spesialis Kusen Aluminium, Kaca Tempered, &amp; Proyek Interior</p>
-                    <p class="text-[10px] text-slate-600 mt-1">Workshop &amp; Kantor: Jl. Raya Mandiri Blok A No. 12, Jawa Timur | Telp/WA: 0812-3456-7890</p>
-                    <p class="text-[10px] text-slate-600">Email: contact@azkamandiri.com | Website: azkamandiri.nichesite.org</p>
+                <div class="flex items-center gap-3">
+                    <img src="{{ asset('assets/brand/azka-logo-icon.png') }}" alt="Azka Mandiri Logo" class="h-12 w-auto object-contain">
+                    <div>
+                        <h1 class="text-xl font-serif font-black tracking-wider text-[#1b2e56] uppercase">AZKA MANDIRI</h1>
+                        <p class="text-xs font-bold text-[#a81b3e] tracking-wider uppercase mt-0.5">Spesialis Kusen Aluminium, Kaca Tempered, &amp; Proyek Interior</p>
+                        <p class="text-[10px] text-slate-600 mt-1">Workshop &amp; Kantor: Jl. Pondok Serut, Paku Jaya, Serpong Utara | Telp/WA: 0819-3273-5383</p>
+                        <p class="text-[10px] text-slate-600">Email: kontak@azkamandiri.com | Website: azkamandiri.nichesite.org</p>
+                    </div>
                 </div>
                 <div class="text-right">
                     <div class="inline-block border border-slate-800 px-3 py-1.5 rounded bg-slate-50">

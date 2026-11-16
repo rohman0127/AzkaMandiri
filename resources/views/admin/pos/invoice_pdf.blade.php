@@ -205,18 +205,26 @@
     <!-- Header -->
     <table class="header-table">
         <tr>
-            <td style="width: 55%;">
-                <div class="company-name">AZKA MANDIRI</div>
-                <div class="company-sub">Spesialis Aluminium, Kaca & Interior</div>
-                <div class="company-contact">
-                    Jl. Pondok Serut, Paku Jaya, Kec. Serpong Utara<br>
-                    Kota Tangerang Selatan, Banten 15220<br>
-                    Telp / WhatsApp: +62 819-3273-5383 | Email: kontak@azkamandiri.com<br>
-                    Website: azkamandiri.nichesite.org
-                </div>
+            <td style="width: 58%;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 58px; vertical-align: top; padding-right: 10px;">
+                            <img src="{{ public_path('assets/brand/azka-logo-icon.png') }}" style="height: 52px; width: auto;" alt="Logo Azka Mandiri">
+                        </td>
+                        <td style="vertical-align: top;">
+                            <div class="company-name" style="color: #1b2e56; font-family: 'Times New Roman', serif; font-size: 20px; letter-spacing: 0.8px;">AZKA MANDIRI</div>
+                            <div class="company-sub" style="color: #a81b3e; font-weight: bold; font-size: 9.5px; letter-spacing: 0.5px;">SPESIALIS ALUMINIUM, KACA &amp; INTERIOR</div>
+                            <div class="company-contact" style="font-size: 9px; color: #64748b; line-height: 1.35; margin-top: 3px;">
+                                Jl. Pondok Serut, Paku Jaya, Kec. Serpong Utara<br>
+                                Kota Tangerang Selatan, Banten 15220<br>
+                                Telp / WhatsApp: +62 819-3273-5383 &bull; Email: kontak@azkamandiri.com
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </td>
-            <td style="width: 45%;">
-                <div class="invoice-title">INVOICE</div>
+            <td style="width: 42%;">
+                <div class="invoice-title" style="color: #1b2e56;">INVOICE</div>
                 <table class="invoice-meta" style="margin-left: auto; width: 90%;">
                     <tr>
                         <td class="text-right font-bold" style="width: 45%;">No. Invoice :</td>

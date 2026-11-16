@@ -19,11 +19,15 @@
         <div class="bg-[#172B4D]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8 sm:p-10">
             <!-- Brand Logo -->
             <div class="text-center mb-8">
-                <a href="{{ url('/') }}" class="inline-block transition-transform hover:scale-105 duration-200">
-                    <img src="{{ asset('assets/brand/logo-horizontal-dark.svg') }}" alt="AzkaMandiri" class="h-12 mx-auto">
+                <a href="{{ url('/') }}" class="inline-flex flex-col items-center transition-transform hover:scale-105 duration-200 group">
+                    <div class="h-16 w-20 rounded-2xl bg-white p-2 flex items-center justify-center shadow-lg shadow-black/30 border border-white/20 mb-3 group-hover:shadow-amber-500/20 transition">
+                        <img src="{{ asset('assets/brand/azka-logo-icon.png') }}" alt="Azka Mandiri" class="max-h-full max-w-full object-contain">
+                    </div>
+                    <span class="font-serif font-black text-2xl tracking-wide text-white">AZKA MANDIRI</span>
+                    <span class="text-[10px] uppercase tracking-[0.25em] text-[#D6A84F] font-bold mt-1">Spesialis Aluminium &amp; Kaca</span>
                 </a>
-                <p class="text-xs uppercase tracking-[0.2em] text-[#D6A84F] font-semibold mt-3">CMS Admin Control Panel</p>
-                <h1 class="text-xl font-bold text-white mt-1">Masuk ke Dashboard</h1>
+                <p class="text-xs uppercase tracking-[0.2em] text-slate-400 font-semibold mt-4">Enterprise POS &amp; Management</p>
+                <h1 class="text-lg font-bold text-white mt-1">Masuk ke Panel Kontrol</h1>
             </div>
 
             @if(session('success'))

@@ -221,17 +221,25 @@
     <!-- Header Section -->
     <table class="header-table">
         <tr>
-            <td style="width: 55%;">
-                <div class="company-name">{{ setting('company_name', 'AZKAMANDIRI') }}</div>
-                <div class="company-sub">Spesialis Jasa Aluminium, Kaca &amp; Fabrikasi Interior</div>
-                <div class="company-contact">
-                    {{ setting('company_address', 'Jl. Raya Cikarang - Cibarusah, Bekasi, Jawa Barat') }}<br>
-                    Telepon / WhatsApp: {{ setting('company_phone', '0812-8888-9999') }} &bull; Email: {{ setting('company_email', 'sales@azkamandiri.com') }}<br>
-                    Website: {{ url('/') }}
-                </div>
+            <td style="width: 58%;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 56px; vertical-align: top; padding-right: 10px;">
+                            <img src="{{ public_path('assets/brand/azka-logo-icon.png') }}" style="height: 50px; width: auto;" alt="Logo Azka Mandiri">
+                        </td>
+                        <td style="vertical-align: top;">
+                            <div class="company-name" style="color: #1b2e56; font-family: 'Times New Roman', serif; font-size: 20px; letter-spacing: 0.8px;">{{ setting('company_name', 'AZKA MANDIRI') }}</div>
+                            <div class="company-sub" style="color: #a81b3e; font-weight: bold; font-size: 9.5px; letter-spacing: 0.5px;">SPESIALIS ALUMINIUM, KACA &amp; FABRIKASI INTERIOR</div>
+                            <div class="company-contact" style="font-size: 9px; color: #64748b; line-height: 1.35; margin-top: 3px;">
+                                {{ setting('company_address', 'Jl. Pondok Serut, Paku Jaya, Kec. Serpong Utara, Kota Tangerang Selatan, Banten 15220') }}<br>
+                                Telepon / WhatsApp: {{ setting('company_phone', '0819-3273-5383') }} &bull; Email: {{ setting('company_email', 'kontak@azkamandiri.com') }}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </td>
-            <td style="width: 45%;">
-                <div class="doc-title">PENAWARAN HARGA</div>
+            <td style="width: 42%;">
+                <div class="doc-title" style="color: #1b2e56;">PENAWARAN HARGA</div>
                 <div class="doc-subtitle">Price Quotation / Sales Proposal</div>
                 <table class="doc-meta" style="margin-left: auto; width: 95%;">
                     <tr>

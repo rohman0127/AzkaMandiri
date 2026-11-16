@@ -68,10 +68,19 @@
     <table style="width: 100%; border-collapse: collapse;">
         <tr>
             <td style="vertical-align: top; width: 70%;">
-                <div style="font-size: 18pt; font-weight: bold; color: #0f172a; letter-spacing: -0.5px;">AZKA<span style="color: #b45309;">MANDIRI</span></div>
-                <div style="font-size: 8pt; font-weight: bold; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 3px;">SPESIALIS KUSEN ALUMINIUM, KACA TEMPERED, &amp; PROYEK INTERIOR</div>
-                <div style="font-size: 7.5pt; color: #475569; margin-top: 2px;">Workshop &amp; Kantor: Jl. Raya Mandiri Blok A No. 12, Jawa Timur | Telp/WA: 0812-3456-7890</div>
-                <div style="font-size: 7.5pt; color: #475569; margin-top: 1px;">Email: contact@azkamandiri.com | Website: azkamandiri.nichesite.org</div>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 52px; vertical-align: top; padding-right: 10px;">
+                            <img src="{{ public_path('assets/brand/azka-logo-icon.png') }}" style="height: 46px; width: auto;" alt="Logo Azka Mandiri">
+                        </td>
+                        <td style="vertical-align: top;">
+                            <div style="font-size: 16pt; font-weight: bold; color: #1b2e56; font-family: 'Times New Roman', serif; letter-spacing: 0.5px;">AZKA MANDIRI</div>
+                            <div style="font-size: 7.5pt; font-weight: bold; color: #a81b3e; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 1px;">SPESIALIS KUSEN ALUMINIUM, KACA TEMPERED, &amp; PROYEK INTERIOR</div>
+                            <div style="font-size: 7.5pt; color: #475569; margin-top: 2px;">Jl. Pondok Serut, Paku Jaya, Kec. Serpong Utara, Kota Tangerang Selatan, Banten 15220 | Telp/WA: +62 819-3273-5383</div>
+                            <div style="font-size: 7.5pt; color: #475569; margin-top: 1px;">Email: kontak@azkamandiri.com | Website: azkamandiri.nichesite.org</div>
+                        </td>
+                    </tr>
+                </table>
             </td>
             <td style="vertical-align: top; width: 30%; text-align: right;">
                 <div style="display: inline-block; border: 1px solid #94a3b8; border-radius: 6px; padding: 6px 14px; text-align: center; background-color: #ffffff;">

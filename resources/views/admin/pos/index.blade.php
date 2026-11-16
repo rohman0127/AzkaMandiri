@@ -225,14 +225,17 @@
 }" class="space-y-4">
 
     <!-- POS Top Header Bar -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 shadow-xs">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-[#172B4D] text-[#D6A84F] flex items-center justify-center font-bold">
-                <i data-lucide="calculator" class="w-5 h-5"></i>
+            <div class="h-10 w-12 rounded-xl bg-slate-50 border border-slate-200 p-1 flex items-center justify-center shrink-0 shadow-2xs">
+                <img src="{{ asset('assets/brand/azka-logo-icon.png') }}" alt="Azka Mandiri" class="max-h-full max-w-full object-contain">
             </div>
             <div>
-                <h2 class="text-base font-extrabold text-[#172B4D] leading-tight">Terminal Kasir POS</h2>
-                <p class="text-[11px] text-gray-500">Nomor Faktur Otomatis: <b class="text-[#D6A84F] font-mono">{{ $nextInvoiceCode }}</b></p>
+                <div class="flex items-center gap-2">
+                    <h2 class="text-base font-extrabold text-[#172B4D] leading-tight">Terminal Kasir POS</h2>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#A81B3E]/10 text-[#A81B3E] border border-[#A81B3E]/20">Azka Mandiri</span>
+                </div>
+                <p class="text-[11px] text-gray-500 mt-0.5">Faktur Transaksi: <b class="text-[#b45309] font-mono font-bold">{{ $nextInvoiceCode }}</b></p>
             </div>
         </div>
 
