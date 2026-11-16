@@ -10,7 +10,7 @@
         <div class="border-b-2 border-slate-900 pb-3 mb-4">
             <div class="flex justify-between items-start">
                 <div class="flex items-center gap-3">
-                    <img src="{{ asset('assets/brand/azka-logo-icon.png') }}" alt="Azka Mandiri Logo" class="h-12 w-auto object-contain">
+                    <img src="{{ asset('assets/brand/logo-icon.svg') }}" alt="Azka Mandiri Logo" class="h-12 w-auto object-contain">
                     <div>
                         <h1 class="text-xl font-serif font-black tracking-wider text-[#1b2e56] uppercase">AZKA MANDIRI</h1>
                         <p class="text-xs font-bold text-[#a81b3e] tracking-wider uppercase mt-0.5">Spesialis Kusen Aluminium, Kaca Tempered, &amp; Proyek Interior</p>

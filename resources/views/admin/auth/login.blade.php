@@ -21,7 +21,7 @@
             <div class="text-center mb-8">
                 <a href="{{ url('/') }}" class="inline-flex flex-col items-center transition-transform hover:scale-105 duration-200 group">
                     <div class="h-16 w-20 rounded-2xl bg-white p-2 flex items-center justify-center shadow-lg shadow-black/30 border border-white/20 mb-3 group-hover:shadow-amber-500/20 transition">
-                        <img src="{{ asset('assets/brand/azka-logo-icon.png') }}" alt="Azka Mandiri" class="max-h-full max-w-full object-contain">
+                        <img src="{{ asset('assets/brand/logo-icon.svg') }}" alt="Azka Mandiri" class="max-h-full max-w-full object-contain">
                     </div>
                     <span class="font-serif font-black text-2xl tracking-wide text-white">AZKA MANDIRI</span>
                     <span class="text-[10px] uppercase tracking-[0.25em] text-[#D6A84F] font-bold mt-1">Spesialis Aluminium &amp; Kaca</span>

@@ -228,7 +228,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 shadow-xs">
         <div class="flex items-center gap-3">
             <div class="h-10 w-12 rounded-xl bg-slate-50 border border-slate-200 p-1 flex items-center justify-center shrink-0 shadow-2xs">
-                <img src="{{ asset('assets/brand/azka-logo-icon.png') }}" alt="Azka Mandiri" class="max-h-full max-w-full object-contain">
+                <img src="{{ asset('assets/brand/logo-icon.svg') }}" alt="Azka Mandiri" class="max-h-full max-w-full object-contain">
             </div>
             <div>
                 <div class="flex items-center gap-2">

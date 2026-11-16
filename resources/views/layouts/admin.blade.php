@@ -60,7 +60,7 @@
         <div class="h-20 flex items-center justify-between px-5 border-b border-white/10 bg-[#0a1322]/90">
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group transition">
                 <div class="h-10 w-12 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 shadow-md shadow-black/20 group-hover:scale-105 transition-transform duration-200">
-                    <img src="{{ asset('assets/brand/azka-logo-icon.png') }}" alt="Logo Azka Mandiri" class="max-h-full max-w-full object-contain">
+                    <img src="{{ asset('assets/brand/logo-icon.svg') }}" alt="Logo Azka Mandiri" class="max-h-full max-w-full object-contain">
                 </div>
                 <div class="leading-tight min-w-0">
                     <span class="font-serif font-black text-white text-base tracking-wide block leading-none">AZKA MANDIRI</span>
