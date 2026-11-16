@@ -56,7 +56,7 @@
 
             <div class="lg:col-span-6">
                 <div class="rounded-3xl overflow-hidden border border-gray-200 shadow-xl bg-gray-100">
-                    <img src="{{ asset('assets/images/services/jendela-aluminium.svg') }}" alt="Pengerjaan Aluminium AzkaMandiri" class="w-full h-96 object-cover">
+                    <img src="{{ setting('about_page_image', setting('about_image')) ? asset(setting('about_page_image', setting('about_image'))) : asset('assets/images/services/jendela-aluminium.svg') }}" alt="Pengerjaan Aluminium AzkaMandiri" class="w-full h-96 object-cover">
                 </div>
             </div>
         </div>

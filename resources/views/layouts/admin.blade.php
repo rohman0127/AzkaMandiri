@@ -9,7 +9,19 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
-<body class="bg-[#F5F6F8] text-[#343A40] min-h-screen antialiased flex" x-data="{ sidebarOpen: false }">
+<body class="bg-[#F5F6F8] text-[#343A40] min-h-screen antialiased flex"
+      x-data="{ 
+          sidebarOpen: false,
+          sidebarCollapsed: localStorage.getItem('sidebar_collapsed') === 'true',
+          toggleSidebar() {
+              if (window.innerWidth >= 1024) {
+                  this.sidebarCollapsed = !this.sidebarCollapsed;
+                  localStorage.setItem('sidebar_collapsed', this.sidebarCollapsed);
+              } else {
+                  this.sidebarOpen = !this.sidebarOpen;
+              }
+          }
+      }">
     <!-- Interactive Top Loading Bar -->
     <div id="azka-top-loader"></div>
 
@@ -39,8 +51,13 @@
     @endphp
 
     <!-- Sidebar -->
-    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-           class="fixed inset-y-0 left-0 z-50 w-64 bg-[#101D33] text-gray-300 flex flex-col transition-transform duration-300 ease-in-out border-r border-white/5"
+    <aside :class="{
+               'translate-x-0': sidebarOpen,
+               '-translate-x-full lg:translate-x-0': !sidebarOpen,
+               'w-64': !sidebarCollapsed,
+               'w-20': sidebarCollapsed
+           }"
+           class="fixed inset-y-0 left-0 z-50 bg-[#101D33] text-gray-300 flex flex-col transition-all duration-300 ease-in-out border-r border-white/5"
            x-data="{
                openGroups: {
                    pos: {{ $isPosActive ? 'true' : 'false' }},
@@ -52,29 +69,34 @@
                    settings: {{ $isSettingsActive ? 'true' : 'false' }}
                },
                toggle(group) {
+                   if (sidebarCollapsed) {
+                       sidebarCollapsed = false;
+                       localStorage.setItem('sidebar_collapsed', 'false');
+                   }
                    this.openGroups[group] = !this.openGroups[group];
                }
            }">
         
         <!-- Sidebar Brand Header -->
-        <div class="h-20 flex items-center justify-between px-5 border-b border-white/10 bg-[#0a1322]/90">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group transition">
+        <div class="h-16 sm:h-20 flex items-center justify-between border-b border-white/10 bg-[#0a1322]/90"
+             :class="sidebarCollapsed ? 'justify-center px-2' : 'px-5'">
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group transition" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <div class="h-10 w-12 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 shadow-md shadow-black/20 group-hover:scale-105 transition-transform duration-200">
                     <img src="{{ asset('assets/brand/logo-icon.svg') }}" alt="Logo Azka Mandiri" class="max-h-full max-w-full object-contain">
                 </div>
-                <div class="leading-tight min-w-0">
+                <div class="leading-tight min-w-0" x-show="!sidebarCollapsed" x-transition>
                     <span class="font-serif font-black text-white text-base tracking-wide block leading-none">AZKA MANDIRI</span>
                     <span class="block text-[9.5px] text-[#D6A84F] uppercase tracking-widest font-bold mt-1">POS &amp; ERP System</span>
                 </div>
             </a>
-            <button @click="sidebarOpen = false" class="lg:hidden text-gray-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition">
+            <button @click="sidebarOpen = false" class="lg:hidden text-gray-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition" x-show="!sidebarCollapsed">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
 
         <!-- Sidebar User Information Widget -->
         <div class="p-3 border-b border-white/10 bg-[#0a1322]/60">
-            <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-white/5 border border-white/10 hover:border-[#D6A84F]/40 transition group">
+            <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-white/5 border border-white/10 hover:border-[#D6A84F]/40 transition group" :class="sidebarCollapsed ? 'justify-center p-2' : ''">
                 <!-- User Avatar / Initials -->
                 <div class="relative shrink-0">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#172B4D] to-[#0a1322] text-[#D6A84F] font-black text-xs flex items-center justify-center border border-[#D6A84F]/30 shadow-xs ring-1 ring-white/10 group-hover:ring-[#D6A84F]/40 transition">
@@ -84,7 +106,7 @@
                 </div>
 
                 <!-- User Name & Role -->
-                <div class="min-w-0 flex-1">
+                <div class="min-w-0 flex-1" x-show="!sidebarCollapsed" x-transition>
                     <a href="{{ route('admin.profile.edit') }}" class="block truncate">
                         <p class="text-xs font-bold text-white truncate leading-tight group-hover:text-[#D6A84F] transition">
                             {{ auth()->user()->name ?? 'Administrator' }}
@@ -97,6 +119,7 @@
 
                 <!-- Quick Profile Link -->
                 <a href="{{ route('admin.profile.edit') }}" 
+                   x-show="!sidebarCollapsed"
                    class="p-1.5 rounded-lg text-gray-400 hover:text-[#D6A84F] hover:bg-white/10 transition shrink-0" 
                    title="Profil &amp; Akun">
                     <i data-lucide="user-cog" class="w-3.5 h-3.5"></i>
@@ -105,33 +128,39 @@
         </div>
 
         <!-- Navigation Menu Links (Accordion Groups) -->
-        <div class="flex-1 overflow-y-auto px-3.5 py-4 space-y-4 scrollbar-thin scrollbar-thumb-white/10">
+        <div class="flex-1 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-white/10" :class="sidebarCollapsed ? 'px-2 py-3 space-y-3' : 'px-3.5 py-4 space-y-4'">
             
             <!-- 1. 📊 MENU UTAMA (STANDALONE) -->
             <div>
-                <p class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Menu Utama</p>
+                <p x-show="!sidebarCollapsed" class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Menu Utama</p>
+                <div x-show="sidebarCollapsed" class="h-px bg-white/10 my-2 mx-1"></div>
                 <nav class="space-y-1">
                     <a href="{{ route('admin.dashboard') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.dashboard') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
+                       :class="sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'px-3 py-2'"
+                       :title="sidebarCollapsed ? 'Dashboard Utama' : ''"
+                       class="flex items-center gap-3 rounded-xl text-xs font-semibold transition {{ request()->routeIs('admin.dashboard') ? 'bg-[#D6A84F] text-[#101D33] font-bold shadow-md' : 'text-gray-300 hover:bg-white/5 hover:text-white' }}">
                         <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0 {{ request()->routeIs('admin.dashboard') ? 'text-[#101D33]' : 'text-gray-400' }}"></i>
-                        <span>Dashboard Utama</span>
+                        <span x-show="!sidebarCollapsed" class="truncate">Dashboard Utama</span>
                     </a>
                 </nav>
             </div>
 
             <!-- MODUL OPERASIONAL & KEUANGAN -->
             <div>
-                <p class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Operasional &amp; Transaksi</p>
+                <p x-show="!sidebarCollapsed" class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Operasional &amp; Transaksi</p>
+                <div x-show="sidebarCollapsed" class="h-px bg-white/10 my-2 mx-1"></div>
                 <div class="space-y-1.5">
 
                     <!-- 2. 🛒 OPERASIONAL & KASIR (POS) -->
                     @if(auth()->user()->can('pos.access') || auth()->user()->can('pos.view_transactions') || auth()->user()->can('customers.view'))
                     <div>
                         <button type="button" @click="toggle('pos')"
-                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isPosActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                                :class="sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'justify-between px-3 py-2'"
+                                :title="sidebarCollapsed ? 'Operasional Kasir' : ''"
+                                class="w-full flex items-center rounded-xl text-xs font-semibold transition border-l-2 {{ $isPosActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <i data-lucide="calculator" class="w-4 h-4 shrink-0 {{ $isPosActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
-                                <span class="truncate">Operasional Kasir</span>
+                                <span x-show="!sidebarCollapsed" class="truncate">Operasional Kasir</span>
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.pos ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
@@ -141,7 +170,7 @@
                         </button>
                         
 
-                        <div x-show="openGroups.pos"
+                        <div x-show="openGroups.pos && !sidebarCollapsed"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 -translate-y-1"
                              x-transition:enter-end="opacity-100 translate-y-0"
@@ -179,19 +208,21 @@
                     @if(auth()->user()->can('products.view') || auth()->user()->can('inventory.adjust_stock') || auth()->user()->can('inventory.categories'))
                     <div>
                         <button type="button" @click="toggle('inventory')"
-                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isInventoryActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                                :class="sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'justify-between px-3 py-2'"
+                                :title="sidebarCollapsed ? 'Inventaris & Stok' : ''"
+                                class="w-full flex items-center rounded-xl text-xs font-semibold transition border-l-2 {{ $isInventoryActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <i data-lucide="package" class="w-4 h-4 shrink-0 {{ $isInventoryActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
-                                <span class="truncate">Inventaris &amp; Stok</span>
+                                <span x-show="!sidebarCollapsed" class="truncate">Inventaris &amp; Stok</span>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <div x-show="!sidebarCollapsed" class="flex items-center gap-2">
                                 <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.inventory ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
                                     <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                                 </span>
                             </div>
                         </button>
 
-                        <div x-show="openGroups.inventory"
+                        <div x-show="openGroups.inventory && !sidebarCollapsed"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 -translate-y-1"
                              x-transition:enter-end="opacity-100 translate-y-0"
@@ -234,17 +265,19 @@
                     @if(auth()->user()->can('suppliers.view') || auth()->user()->can('purchases.view') || auth()->user()->can('purchases.create'))
                     <div>
                         <button type="button" @click="toggle('suppliers')"
-                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isSuppliersActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                                :class="sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'justify-between px-3 py-2'"
+                                :title="sidebarCollapsed ? 'Supplier & Pembelian' : ''"
+                                class="w-full flex items-center rounded-xl text-xs font-semibold transition border-l-2 {{ $isSuppliersActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <i data-lucide="truck" class="w-4 h-4 shrink-0 {{ $isSuppliersActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
-                                <span class="truncate">Supplier &amp; Pembelian</span>
+                                <span x-show="!sidebarCollapsed" class="truncate">Supplier &amp; Pembelian</span>
                             </div>
-                            <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.suppliers ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                            <span x-show="!sidebarCollapsed" class="transition-transform duration-200 inline-flex items-center" :class="openGroups.suppliers ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
                                 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                             </span>
                         </button>
 
-                        <div x-show="openGroups.suppliers"
+                        <div x-show="openGroups.suppliers && !sidebarCollapsed"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 -translate-y-1"
                              x-transition:enter-end="opacity-100 translate-y-0"
@@ -278,17 +311,19 @@
                     @if(auth()->user()->can('reports.sales') || auth()->user()->can('reports.purchases') || auth()->user()->can('reports.profit_loss') || auth()->user()->can('reports.stock'))
                     <div>
                         <button type="button" @click="toggle('reports')"
-                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isReportsActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                                :class="sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'justify-between px-3 py-2'"
+                                :title="sidebarCollapsed ? 'Laporan & Keuangan' : ''"
+                                class="w-full flex items-center rounded-xl text-xs font-semibold transition border-l-2 {{ $isReportsActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <i data-lucide="bar-chart-3" class="w-4 h-4 shrink-0 {{ $isReportsActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
-                                <span class="truncate">Laporan &amp; Keuangan</span>
+                                <span x-show="!sidebarCollapsed" class="truncate">Laporan &amp; Keuangan</span>
                             </div>
-                            <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.reports ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                            <span x-show="!sidebarCollapsed" class="transition-transform duration-200 inline-flex items-center" :class="openGroups.reports ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
                                 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                             </span>
                         </button>
 
-                        <div x-show="openGroups.reports"
+                        <div x-show="openGroups.reports && !sidebarCollapsed"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 -translate-y-1"
                              x-transition:enter-end="opacity-100 translate-y-0"
@@ -329,17 +364,20 @@
 
             <!-- MODUL KONTEN & PROFIL USAHA -->
             <div>
-                <p class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Konten &amp; Profil Publik</p>
+                <p x-show="!sidebarCollapsed" class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Konten &amp; Profil Publik</p>
+                <div x-show="sidebarCollapsed" class="h-px bg-white/10 my-2 mx-1"></div>
                 <div class="space-y-1.5">
 
                     <!-- 6. 🌐 MANAJEMEN KONTEN PUBLIK (CMS) -->
                     @if(auth()->user()->can('services.manage') || auth()->user()->can('portfolios.manage') || auth()->user()->can('articles.manage') || auth()->user()->can('testimonials.manage') || auth()->user()->can('messages.view'))
                     <div>
                         <button type="button" @click="toggle('cms')"
-                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isCmsActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                                :class="sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'justify-between px-3 py-2'"
+                                :title="sidebarCollapsed ? 'Manajemen Website' : ''"
+                                class="w-full flex items-center rounded-xl text-xs font-semibold transition border-l-2 {{ $isCmsActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <i data-lucide="globe" class="w-4 h-4 shrink-0 {{ $isCmsActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
-                                <span class="truncate">Manajemen Website</span>
+                                <span x-show="!sidebarCollapsed" class="truncate">Manajemen Website</span>
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.cms ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
@@ -348,7 +386,7 @@
                             </div>
                         </button>
 
-                        <div x-show="openGroups.cms"
+                        <div x-show="openGroups.cms && !sidebarCollapsed"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 -translate-y-1"
                              x-transition:enter-end="opacity-100 translate-y-0"
@@ -394,17 +432,19 @@
                     @if(auth()->user()->can('pages.manage'))
                     <div>
                         <button type="button" @click="toggle('company')"
-                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isCompanyActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                                :class="sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'justify-between px-3 py-2'"
+                                :title="sidebarCollapsed ? 'Profil Perusahaan' : ''"
+                                class="w-full flex items-center rounded-xl text-xs font-semibold transition border-l-2 {{ $isCompanyActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <i data-lucide="building-2" class="w-4 h-4 shrink-0 {{ $isCompanyActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
-                                <span class="truncate">Profil Perusahaan</span>
+                                <span x-show="!sidebarCollapsed" class="truncate">Profil Perusahaan</span>
                             </div>
-                            <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.company ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                            <span x-show="!sidebarCollapsed" class="transition-transform duration-200 inline-flex items-center" :class="openGroups.company ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
                                 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                             </span>
                         </button>
 
-                        <div x-show="openGroups.company"
+                        <div x-show="openGroups.company && !sidebarCollapsed"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 -translate-y-1"
                              x-transition:enter-end="opacity-100 translate-y-0"
@@ -425,24 +465,27 @@
 
             <!-- MODUL SISTEM & ADMINISTRASI -->
             <div>
-                <p class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Sistem &amp; Administrasi</p>
+                <p x-show="!sidebarCollapsed" class="px-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Sistem &amp; Administrasi</p>
+                <div x-show="sidebarCollapsed" class="h-px bg-white/10 my-2 mx-1"></div>
                 <div class="space-y-1.5">
 
                     <!-- 8. 🛡️ PENGATURAN SISTEM & AKSES (ADMIN AREA) -->
                     @if(auth()->user()->can('settings.profile') || auth()->user()->can('settings.seo') || auth()->user()->can('users.view') || auth()->user()->can('roles.manage'))
                     <div>
                         <button type="button" @click="toggle('settings')"
-                                class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition border-l-2 {{ $isSettingsActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
+                                :class="sidebarCollapsed ? 'justify-center px-2 py-2.5' : 'justify-between px-3 py-2'"
+                                :title="sidebarCollapsed ? 'Pengaturan Sistem' : ''"
+                                class="w-full flex items-center rounded-xl text-xs font-semibold transition border-l-2 {{ $isSettingsActive ? 'bg-white/5 text-white border-[#D6A84F]' : 'text-gray-300 hover:text-white hover:bg-white/5 border-transparent' }}">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <i data-lucide="shield" class="w-4 h-4 shrink-0 {{ $isSettingsActive ? 'text-[#D6A84F]' : 'text-gray-400' }}"></i>
-                                <span class="truncate">Pengaturan Sistem</span>
+                                <span x-show="!sidebarCollapsed" class="truncate">Pengaturan Sistem</span>
                             </div>
-                            <span class="transition-transform duration-200 inline-flex items-center" :class="openGroups.settings ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
+                            <span x-show="!sidebarCollapsed" class="transition-transform duration-200 inline-flex items-center" :class="openGroups.settings ? 'rotate-90 text-[#D6A84F]' : 'text-gray-400'">
                                 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                             </span>
                         </button>
 
-                        <div x-show="openGroups.settings"
+                        <div x-show="openGroups.settings && !sidebarCollapsed"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 -translate-y-1"
                              x-transition:enter-end="opacity-100 translate-y-0"
@@ -489,21 +532,19 @@
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+    <div :class="sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'"
+         class="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out">
         <!-- Topbar -->
-        <header class="h-16 sm:h-20 bg-white border-b border-slate-200/90 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 shadow-xs">
-            <div class="flex items-center gap-3 sm:gap-4 min-w-0">
-                <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition shrink-0" aria-label="Buka Menu">
-                    <i data-lucide="menu" class="w-5 h-5"></i>
+        <header class="h-16 bg-white border-b border-slate-200/90 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 shadow-xs">
+            <!-- Left: Minimize / Toggle Sidebar Button -->
+            <div class="flex items-center gap-3">
+                <button type="button" 
+                        @click="toggleSidebar()"
+                        class="p-2 sm:px-3 sm:py-2 rounded-xl text-slate-700 hover:text-[#101D33] hover:bg-slate-100 transition border border-slate-200 shadow-2xs group flex items-center gap-2 cursor-pointer focus:outline-hidden"
+                        :title="sidebarCollapsed ? 'Buka / Perluas Sidebar' : 'Minimize Sidebar'">
+                    <i data-lucide="menu" class="w-5 h-5 text-slate-700 group-hover:text-slate-900"></i>
+                    <span class="hidden sm:inline text-xs font-bold text-slate-700 group-hover:text-slate-900" x-text="sidebarCollapsed ? 'Buka Menu' : 'Minimize Sidebar'"></span>
                 </button>
-
-                <!-- Page Breadcrumbs & Current Page Title -->
-                <div class="min-w-0">
-                    <div class="hidden md:block mb-0.5">
-                        @include('partials.admin.breadcrumbs')
-                    </div>
-                    <h1 class="text-sm sm:text-base lg:text-lg font-bold text-slate-900 leading-tight truncate">@yield('title', 'Dashboard')</h1>
-                </div>
             </div>
 
             <div class="flex items-center gap-3 sm:gap-4 shrink-0">

@@ -361,7 +361,6 @@
                 @endif
                 <div class="terms-box" style="margin-top: 0;">
                     <div class="terms-title">Informasi Rekening Pembayaran Resmi:</div>
-                    <strong>Bank Mandiri:</strong> 156-00-1888-9999 a.n. <strong>CV Azka Mandiri Perkasa</strong><br>
                     <strong>Bank BCA:</strong> 842-099-1234 a.n. <strong>Azka Mandiri</strong><br>
                     <span style="font-size: 8px; color: #64748b;">Harap cantumkan No. Penawaran pada berita transfer dan konfirmasikan bukti pembayaran.</span>
                 </div>

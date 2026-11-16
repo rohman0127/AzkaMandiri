@@ -44,10 +44,23 @@ class ProfileSettingController extends Controller
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
             'logo_dark' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
             'favicon' => 'nullable|mimes:jpeg,png,jpg,webp,svg,ico|max:2048',
+            'hero_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'hero_badge_title' => 'nullable|string|max:255',
+            'hero_badge_subtitle' => 'nullable|string|max:255',
+            'hero_badge_tag' => 'nullable|string|max:255',
+            'about_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'about_badge_title' => 'nullable|string|max:255',
+            'about_badge_desc' => 'nullable|string|max:255',
+            'about_page_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'cta_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+            'cta_title' => 'nullable|string|max:255',
+            'cta_subtitle' => 'nullable|string|max:255',
+            'years_experience' => 'nullable|string|max:50',
         ]);
 
+        $fileKeys = ['logo', 'logo_dark', 'favicon', 'hero_image', 'about_image', 'about_page_image', 'cta_image'];
         foreach ($validated as $key => $value) {
-            if (in_array($key, ['logo', 'logo_dark', 'favicon'])) {
+            if (in_array($key, $fileKeys)) {
                 continue;
             }
             Setting::set($key, $value);
@@ -66,6 +79,26 @@ class ProfileSettingController extends Controller
         if ($request->hasFile('favicon')) {
             $favPath = $this->uploadImage($request->file('favicon'), 'brand');
             Setting::set('favicon_path', $favPath, 'assets');
+        }
+
+        if ($request->hasFile('hero_image')) {
+            $heroPath = $this->uploadImage($request->file('hero_image'), 'frontend');
+            Setting::set('hero_image', $heroPath, 'frontend');
+        }
+
+        if ($request->hasFile('about_image')) {
+            $aboutPath = $this->uploadImage($request->file('about_image'), 'frontend');
+            Setting::set('about_image', $aboutPath, 'frontend');
+        }
+
+        if ($request->hasFile('about_page_image')) {
+            $aboutPagePath = $this->uploadImage($request->file('about_page_image'), 'frontend');
+            Setting::set('about_page_image', $aboutPagePath, 'frontend');
+        }
+
+        if ($request->hasFile('cta_image')) {
+            $ctaPath = $this->uploadImage($request->file('cta_image'), 'frontend');
+            Setting::set('cta_image', $ctaPath, 'frontend');
         }
 
         return back()->with('success', 'Profil dan informasi website berhasil diperbarui.');

@@ -81,6 +81,151 @@
             </div>
         </div>
 
+        <!-- Gambar & Visual Tampilan Frontend Website -->
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/80 shadow-xs space-y-6">
+            <div>
+                <h3 class="text-sm font-bold text-[#172B4D] uppercase tracking-wider border-b border-gray-100 pb-3 flex items-center justify-between">
+                    <span>Gambar &amp; Banner Tampilan Frontend Website</span>
+                    <span class="text-[10px] text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full font-bold border border-emerald-200">100% Dinamis</span>
+                </h3>
+                <p class="text-xs text-gray-500 mt-2">Ubah foto showcase arsitektur di banner beranda, seksi profil, dan banner halaman publik secara dinamis tanpa sentuh kode.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- 1. Hero Showcase Image (Beranda) -->
+                <div class="p-5 rounded-2xl bg-gray-50 border border-gray-200 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-[#172B4D] uppercase tracking-wider block">Gambar Utama Hero Beranda</span>
+                            <span class="text-[11px] text-gray-500">Showcase pintu/jendela utama di sebelah kanan banner headline</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-[10px] font-bold bg-[#172B4D] text-white rounded-md">Hero Card</span>
+                    </div>
+
+                    <!-- Current Preview -->
+                    <div class="relative rounded-2xl overflow-hidden border border-gray-200 bg-[#101D33] p-3 flex items-center justify-center min-h-[180px]">
+                        <img src="{{ !empty($settings['hero_image']) ? asset($settings['hero_image']) : asset('assets/images/services/pintu-aluminium.svg') }}" 
+                             alt="Preview Hero" class="max-h-48 w-auto rounded-xl object-cover shadow-md">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Ganti File Gambar Hero</label>
+                        <input type="file" name="hero_image" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#172B4D] file:text-white hover:file:bg-[#101D33] cursor-pointer">
+                        <span class="text-[10px] text-gray-400 mt-1 block">Format: JPG, PNG, WEBP, SVG (Maks. 5MB).</span>
+                    </div>
+
+                    <div class="space-y-3 pt-3 border-t border-gray-200">
+                        <div>
+                            <label for="hero_badge_title" class="block text-xs font-bold text-gray-700 mb-1">Judul Kartu Overlay Hero</label>
+                            <input type="text" id="hero_badge_title" name="hero_badge_title" value="{{ old('hero_badge_title', $settings['hero_badge_title'] ?? 'Fabrikasi Presisi & Rapi') }}"
+                                   class="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-[#D6A84F] transition"
+                                   placeholder="Contoh: Pintu Aluminium Elegan / Fabrikasi Presisi & Rapi">
+                        </div>
+                        <div>
+                            <label for="hero_badge_subtitle" class="block text-xs font-bold text-gray-700 mb-1">Subjudul Kartu Overlay</label>
+                            <input type="text" id="hero_badge_subtitle" name="hero_badge_subtitle" value="{{ old('hero_badge_subtitle', $settings['hero_badge_subtitle'] ?? 'Pintu, Jendela, Kusen & Kaca Tempered') }}"
+                                   class="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-[#D6A84F] transition"
+                                   placeholder="Contoh: Model Swing, Sliding & Lipat Folding • AZKAMANDIRI">
+                        </div>
+                        <div>
+                            <label for="hero_badge_tag" class="block text-xs font-bold text-gray-700 mb-1">Badge Tag Emas</label>
+                            <input type="text" id="hero_badge_tag" name="hero_badge_tag" value="{{ old('hero_badge_tag', $settings['hero_badge_tag'] ?? 'Garansi Pasang') }}"
+                                   class="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-[#D6A84F] transition"
+                                   placeholder="Contoh: Garansi Pasang / Bergaransi">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. About Preview Image (Beranda) -->
+                <div class="p-5 rounded-2xl bg-gray-50 border border-gray-200 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-[#172B4D] uppercase tracking-wider block">Gambar Seksi Tentang Kami (Beranda)</span>
+                            <span class="text-[11px] text-gray-500">Tampil di seksi pengenalan usaha pada homepage</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-[10px] font-bold bg-[#172B4D] text-white rounded-md">About Home</span>
+                    </div>
+
+                    <!-- Current Preview -->
+                    <div class="relative rounded-2xl overflow-hidden border border-gray-200 bg-white p-3 flex items-center justify-center min-h-[180px]">
+                        <img src="{{ !empty($settings['about_image']) ? asset($settings['about_image']) : asset('assets/images/services/kusen-aluminium.svg') }}" 
+                             alt="Preview About" class="max-h-48 w-auto rounded-xl object-cover shadow-md">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Ganti File Gambar Tentang Kami</label>
+                        <input type="file" name="about_image" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#172B4D] file:text-white hover:file:bg-[#101D33] cursor-pointer">
+                        <span class="text-[10px] text-gray-400 mt-1 block">Format: JPG, PNG, WEBP, SVG (Maks. 5MB).</span>
+                    </div>
+
+                    <div class="space-y-3 pt-3 border-t border-gray-200">
+                        <div>
+                            <label for="years_experience" class="block text-xs font-bold text-gray-700 mb-1">Badge Pengalaman (Tahun)</label>
+                            <input type="text" id="years_experience" name="years_experience" value="{{ old('years_experience', $settings['years_experience'] ?? '10+') }}"
+                                   class="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-[#D6A84F] transition"
+                                   placeholder="Contoh: 10+">
+                        </div>
+                        <div>
+                            <label for="about_badge_title" class="block text-xs font-bold text-gray-700 mb-1">Badge Judul Kotak</label>
+                            <input type="text" id="about_badge_title" name="about_badge_title" value="{{ old('about_badge_title', $settings['about_badge_title'] ?? 'Keahlian & Presisi') }}"
+                                   class="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-[#D6A84F] transition">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. About Page Showcase Image (/about) -->
+                <div class="p-5 rounded-2xl bg-gray-50 border border-gray-200 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-[#172B4D] uppercase tracking-wider block">Gambar Halaman Tentang Kami (/about)</span>
+                            <span class="text-[11px] text-gray-500">Foto profil pengerjaan di halaman profil lengkap</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-[10px] font-bold bg-[#172B4D] text-white rounded-md">Page About</span>
+                    </div>
+
+                    <!-- Current Preview -->
+                    <div class="relative rounded-2xl overflow-hidden border border-gray-200 bg-white p-3 flex items-center justify-center min-h-[180px]">
+                        <img src="{{ !empty($settings['about_page_image']) ? asset($settings['about_page_image']) : (!empty($settings['about_image']) ? asset($settings['about_image']) : asset('assets/images/services/jendela-aluminium.svg')) }}" 
+                             alt="Preview About Page" class="max-h-48 w-auto rounded-xl object-cover shadow-md">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Ganti File Foto Halaman About</label>
+                        <input type="file" name="about_page_image" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#172B4D] file:text-white hover:file:bg-[#101D33] cursor-pointer">
+                        <span class="text-[10px] text-gray-400 mt-1 block">Format: JPG, PNG, WEBP, SVG (Maks. 5MB).</span>
+                    </div>
+                </div>
+
+                <!-- 4. CTA Banner Background / Image -->
+                <div class="p-5 rounded-2xl bg-gray-50 border border-gray-200 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-[#172B4D] uppercase tracking-wider block">Gambar Banner Konsultasi &amp; Kontak</span>
+                            <span class="text-[11px] text-gray-500">Banner ajakan survei gratis di bagian bawah halaman</span>
+                        </div>
+                        <span class="px-2 py-0.5 text-[10px] font-bold bg-[#172B4D] text-white rounded-md">CTA Banner</span>
+                    </div>
+
+                    <!-- Current Preview -->
+                    <div class="relative rounded-2xl overflow-hidden border border-gray-200 bg-white p-3 flex items-center justify-center min-h-[180px]">
+                        @if(!empty($settings['cta_image']))
+                            <img src="{{ asset($settings['cta_image']) }}" alt="Preview CTA" class="max-h-48 w-auto rounded-xl object-cover shadow-md">
+                        @else
+                            <div class="p-6 text-center text-gray-400">
+                                <i data-lucide="image" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
+                                <p class="text-xs font-semibold">Latar belakang default gradien korporat aktif</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Upload Background / Gambar CTA</label>
+                        <input type="file" name="cta_image" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#172B4D] file:text-white hover:file:bg-[#101D33] cursor-pointer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Contact & Service Areas -->
         <div class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/80 shadow-xs space-y-6">
             <h3 class="text-sm font-bold text-[#172B4D] uppercase tracking-wider border-b border-gray-100 pb-3">Kontak &amp; Wilayah Kerja</h3>

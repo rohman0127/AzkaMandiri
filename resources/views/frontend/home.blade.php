@@ -65,16 +65,16 @@
             <!-- Right Architectural Showcase Card -->
             <div class="lg:col-span-5 relative">
                 <div class="relative mx-auto max-w-md lg:max-w-none rounded-3xl overflow-hidden border border-white/15 bg-white/5 backdrop-blur-xl p-3 shadow-2xl">
-                    <img src="{{ asset('assets/images/services/pintu-aluminium.svg') }}" 
-                         alt="Instalasi Aluminium & Kaca AzkaMandiri" 
+                    <img src="{{ setting('hero_image') ? asset(setting('hero_image')) : asset('assets/images/services/pintu-aluminium.svg') }}" 
+                         alt="{{ setting('hero_badge_title', 'Instalasi Aluminium & Kaca AzkaMandiri') }}" 
                          class="w-full h-80 sm:h-96 lg:h-[460px] object-cover rounded-2xl shadow-inner">
                     <div class="p-4 bg-[#101D33]/90 backdrop-blur-md rounded-xl mt-3 flex items-center justify-between border border-white/10">
                         <div>
-                            <p class="text-xs font-bold text-white">Fabrikasi Presisi &amp; Rapi</p>
-                            <p class="text-[11px] text-gray-400">Pintu, Jendela, Kusen &amp; Kaca Tempered</p>
+                            <p class="text-xs font-bold text-white">{{ setting('hero_badge_title', 'Fabrikasi Presisi & Rapi') }}</p>
+                            <p class="text-[11px] text-gray-400">{{ setting('hero_badge_subtitle', 'Pintu, Jendela, Kusen & Kaca Tempered') }}</p>
                         </div>
                         <span class="px-3 py-1 rounded-full bg-[#D6A84F]/20 text-[#D6A84F] text-[10px] font-bold uppercase tracking-wider border border-[#D6A84F]/30">
-                            Garansi Pasang
+                            {{ setting('hero_badge_tag', 'Garansi Pasang') }}
                         </span>
                     </div>
                 </div>
@@ -136,11 +136,11 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div class="lg:col-span-6 relative">
                 <div class="relative rounded-3xl overflow-hidden shadow-xl border border-gray-200">
-                    <img src="{{ asset('assets/images/services/kusen-aluminium.svg') }}" alt="Tentang AzkaMandiri" class="w-full h-80 sm:h-96 object-cover">
+                    <img src="{{ setting('about_image') ? asset(setting('about_image')) : asset('assets/images/services/kusen-aluminium.svg') }}" alt="Tentang AzkaMandiri" class="w-full h-80 sm:h-96 object-cover">
                 </div>
                 <div class="absolute -bottom-6 -right-4 sm:right-6 bg-[#172B4D] text-white p-5 rounded-2xl shadow-xl border border-white/10 max-w-xs">
-                    <p class="text-xs uppercase tracking-wider text-[#D6A84F] font-bold">Keahlian &amp; Presisi</p>
-                    <p class="text-xs text-gray-300 mt-1">Spesialis pengerjaan aluminium dan kaca custom sejak tahun-tahun berpengalaman.</p>
+                    <p class="text-xs uppercase tracking-wider text-[#D6A84F] font-bold">{{ setting('about_badge_title', 'Keahlian & Presisi') }}</p>
+                    <p class="text-xs text-gray-300 mt-1">{{ setting('about_badge_desc', 'Spesialis pengerjaan aluminium dan kaca custom sejak tahun-tahun berpengalaman.') }}</p>
                 </div>
             </div>
 
@@ -578,8 +578,13 @@
 @endif
 
 <!-- CTA WHATSAPP BANNER (SECTION 5.A.10) -->
-<section class="py-16 bg-gradient-to-r from-[#172B4D] via-[#101D33] to-[#172B4D] text-white">
-    <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-14 text-center space-y-6">
+<section class="relative py-16 bg-gradient-to-r from-[#172B4D] via-[#101D33] to-[#172B4D] text-white overflow-hidden">
+    @if(setting('cta_image'))
+        <div class="absolute inset-0 z-0 opacity-20">
+            <img src="{{ asset(setting('cta_image')) }}" alt="Background CTA" class="w-full h-full object-cover">
+        </div>
+    @endif
+    <div class="relative z-10 w-full px-4 sm:px-6 lg:px-10 xl:px-14 text-center space-y-6">
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-[#D6A84F] text-xs font-bold uppercase tracking-wider border border-white/10">
             <i data-lucide="sparkles" class="w-4 h-4"></i>
             <span>Konsultasi Cepat Tanpa Ribet</span>
