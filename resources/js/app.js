@@ -414,4 +414,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+import { quotationForm } from './admin/quotation-form';
+
+// Register Enterprise Sub-Modules into Alpine
+Alpine.data('quotationForm', quotationForm);
+window.quotationForm = quotationForm;
+
 Alpine.start();

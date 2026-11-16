@@ -3,8 +3,8 @@
  * Handles dynamic row insertion, inventory product lookup, dimensions, and live financial totals.
  */
 
-document.addEventListener('alpine:init', () => {
-    Alpine.data('quotationForm', () => ({
+export function quotationForm() {
+    return {
         items: [],
         products: [],
         discount: 0,
@@ -14,23 +14,50 @@ document.addEventListener('alpine:init', () => {
         init() {
             const dataEl = document.getElementById('quotation-form-data');
             if (dataEl) {
-                try {
-                    this.products = JSON.parse(dataEl.dataset.products || '[]');
-                } catch (e) {
-                    this.products = [];
-                }
+                // 1. Primary: decode robust base64 payload (safe against double-quotes in product names)
+                if (dataEl.dataset.payload) {
+                    try {
+                        const jsonStr = decodeURIComponent(escape(atob(dataEl.dataset.payload)));
+                        const parsed = JSON.parse(jsonStr);
+                        this.products = Array.isArray(parsed.products) ? parsed.products : [];
+                        this.items = (Array.isArray(parsed.items) && parsed.items.length > 0) 
+                            ? parsed.items 
+                            : [this.newItem()];
+                        this.discount = parseFloat(parsed.discount) || 0;
+                        this.tax = parseFloat(parsed.tax) || 0;
+                        this.isCustomCustomer = Boolean(parsed.isCustomCustomer);
+                    } catch (e) {
+                        console.warn('[QuotationForm] Error decoding base64 payload, using fallback:', e);
+                        this.items = [this.newItem()];
+                    }
+                } 
+                // 2. Fallback: direct data-* attributes
+                else {
+                    try {
+                        this.products = JSON.parse(dataEl.dataset.products || '[]');
+                    } catch (e) {
+                        this.products = [];
+                    }
 
-                try {
-                    const initialItems = JSON.parse(dataEl.dataset.items || '[]');
-                    this.items = initialItems.length > 0 ? initialItems : [this.newItem()];
-                } catch (e) {
-                    this.items = [this.newItem()];
-                }
+                    try {
+                        const initialItems = JSON.parse(dataEl.dataset.items || '[]');
+                        this.items = (Array.isArray(initialItems) && initialItems.length > 0) 
+                            ? initialItems 
+                            : [this.newItem()];
+                    } catch (e) {
+                        this.items = [this.newItem()];
+                    }
 
-                this.discount = parseFloat(dataEl.dataset.discount) || 0;
-                this.tax = parseFloat(dataEl.dataset.tax) || 0;
-                this.isCustomCustomer = dataEl.dataset.isCustomCustomer === 'true';
+                    this.discount = parseFloat(dataEl.dataset.discount) || 0;
+                    this.tax = parseFloat(dataEl.dataset.tax) || 0;
+                    this.isCustomCustomer = dataEl.dataset.isCustomCustomer === 'true';
+                }
             } else {
+                this.items = [this.newItem()];
+            }
+
+            // Ensure at least one item row is always visible
+            if (!Array.isArray(this.items) || this.items.length === 0) {
                 this.items = [this.newItem()];
             }
 
@@ -69,7 +96,7 @@ document.addEventListener('alpine:init', () => {
             if (found) {
                 item.item_name = found.name;
                 item.unit_name = found.unit || 'unit';
-                item.unit_price = found.price || 0;
+                item.unit_price = parseFloat(found.price) || 0;
             }
         },
 
@@ -92,5 +119,20 @@ document.addEventListener('alpine:init', () => {
         formatIDR(val) {
             return 'Rp ' + Math.round(val || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
-    }));
+    };
+}
+
+// Global window registration
+window.quotationForm = quotationForm;
+
+// Immediate Alpine.data registration if Alpine is already loaded
+if (window.Alpine) {
+    window.Alpine.data('quotationForm', quotationForm);
+}
+
+// Event listener for deferred or asynchronous Alpine initialization
+document.addEventListener('alpine:init', () => {
+    if (window.Alpine) {
+        window.Alpine.data('quotationForm', quotationForm);
+    }
 });

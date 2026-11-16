@@ -29,13 +29,18 @@
         </div>
     </div>
 
-    <!-- Hidden Data Holder for Clean Alpine Extraction -->
-    <div id="quotation-form-data" class="hidden"
-         data-products="{{ json_encode($products) }}"
-         data-items="{{ json_encode(old('items', [])) }}"
-         data-discount="{{ old('discount', 0) }}"
-         data-tax="{{ old('tax', 0) }}"
-         data-is-custom-customer="{{ old('customer_id') === 'custom' ? 'true' : 'false' }}"></div>
+    @php
+        $formDataPayload = base64_encode(json_encode([
+            'products' => $products,
+            'items' => old('items', []),
+            'discount' => (float) old('discount', 0),
+            'tax' => (float) old('tax', 0),
+            'isCustomCustomer' => old('customer_id') === 'custom' || (!empty(old('customer_name'))),
+        ], JSON_UNESCAPED_UNICODE));
+    @endphp
+
+    <!-- Hidden Data Holder for Clean Alpine Extraction (base64 safe against quote mangling) -->
+    <div id="quotation-form-data" class="hidden" data-payload="{{ $formDataPayload }}"></div>
 
     <!-- Main Form -->
     <form action="{{ route('admin.pos.quotations.store') }}" method="POST" x-data="quotationForm" class="space-y-6">
@@ -211,9 +216,11 @@
                                         <select :name="`items[${index}][product_id]`" x-model="item.product_id" @change="onProductSelect(item)"
                                                 class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-700 focus:bg-white focus:outline-none focus:border-primary transition">
                                             <option value="">-- Pilih Material POS (Opsional) --</option>
-                                            <template x-for="p in products" :key="p.id">
-                                                <option :value="p.id" x-text="`${p.name} (Rp ${Math.round(p.price).toLocaleString('id-ID')})`"></option>
-                                            </template>
+                                            @foreach($products as $p)
+                                                <option value="{{ $p['id'] }}">
+                                                    {{ $p['name'] }} (Rp {{ number_format($p['price'], 0, ',', '.') }})
+                                                </option>
+                                            @endforeach
                                         </select>
                                         <!-- Item name input -->
                                         <input type="text" :name="`items[${index}][item_name]`" x-model="item.item_name" required
@@ -382,3 +389,4 @@
 @push('scripts')
 @vite(['resources/js/admin/quotation-form.js'])
 @endpush
+
