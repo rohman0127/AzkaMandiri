@@ -28,7 +28,7 @@
     <meta name="twitter:image" content="@yield('og_image', asset(setting('og_image_path', 'assets/brand/logo-horizontal.svg')))">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="{{ asset(setting('favicon_path', 'assets/brand/favicon.svg')) }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset(ltrim(setting('favicon_path', 'assets/brand/favicon.svg'), '/')) }}?v=3">
 
     <!-- Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -99,8 +99,8 @@
             <div class="flex items-center justify-between">
                 <!-- Brand Logo -->
                 <a href="{{ route('home') }}" class="flex items-center gap-2 group transition">
-                    <img src="{{ asset(setting('logo_dark_path', 'assets/brand/logo-horizontal-dark.svg')) }}" 
-                         alt="{{ setting('site_name', 'AzkaMandiri') }}" 
+                    <img src="{{ asset(ltrim(setting('logo_dark_path', 'assets/brand/logo-horizontal-dark.svg'), '/')) }}?v=3" 
+                         alt="{{ setting('company_name', setting('site_name', 'AZKA MANDIRI')) }}" 
                          class="h-10 sm:h-12 w-auto transition-transform group-hover:scale-102">
                 </a>
 
@@ -230,8 +230,8 @@
                 <!-- Col 1: Brand Info -->
                 <div class="space-y-4">
                     <a href="{{ route('home') }}" class="inline-block">
-                        <img src="{{ asset(setting('logo_dark_path', 'assets/brand/logo-horizontal-dark.svg')) }}" 
-                             alt="{{ setting('site_name', 'AzkaMandiri') }}" class="h-10 w-auto">
+                        <img src="{{ asset(ltrim(setting('logo_dark_path', 'assets/brand/logo-horizontal-dark.svg'), '/')) }}?v=3" 
+                             alt="{{ setting('company_name', setting('site_name', 'AZKA MANDIRI')) }}" class="h-10 w-auto">
                     </a>
                     <p class="text-xs text-gray-400 leading-relaxed">
                         {{ setting('about_short', 'AzkaMandiri adalah penyedia jasa pemasangan, pembuatan, dan fabrikasi aluminium serta kaca berkualitas untuk kebutuhan rumah tinggal, ruko, kantor, dan gedung.') }}

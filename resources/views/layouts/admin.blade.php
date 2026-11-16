@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Panel') – AzkaMandiri Control Panel</title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/brand/favicon.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('assets/brand/favicon.svg') }}?v=3">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
@@ -82,7 +82,7 @@
              :class="sidebarCollapsed ? 'justify-center px-2' : 'px-5'">
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 group transition" :class="sidebarCollapsed ? 'justify-center' : ''">
                 <div class="h-10 w-12 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 shadow-md shadow-black/20 group-hover:scale-105 transition-transform duration-200">
-                    <img src="{{ asset('assets/brand/logo-icon.svg') }}" alt="Logo Azka Mandiri" class="max-h-full max-w-full object-contain">
+                    <img src="{{ asset('assets/brand/logo-icon.svg') }}?v=3" alt="Logo Azka Mandiri" class="max-h-full max-w-full object-contain">
                 </div>
                 <div class="leading-tight min-w-0" x-show="!sidebarCollapsed" x-transition>
                     <span class="font-serif font-black text-white text-base tracking-wide block leading-none">AZKA MANDIRI</span>

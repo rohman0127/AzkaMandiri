@@ -65,9 +65,26 @@ try {
         }
         @unlink($rootDir . '/bootstrap/cache/config.php');
         @unlink($rootDir . '/bootstrap/cache/routes-v7.php');
+        // Clear compiled blade views to reflect changes immediately
+        $viewFiles = glob($rootDir . '/storage/framework/views/*.php');
+        if ($viewFiles) {
+            foreach ($viewFiles as $vf) {
+                @unlink($vf);
+            }
+        }
     }
 } catch (\Throwable $e) {
     @file_put_contents(__DIR__ . '/deploy_error.log', "Deploy extract notice: " . $e->getMessage() . "\n", FILE_APPEND);
+}
+
+// Auto-run one-time server synchronization if run_sync.php is present
+if (file_exists(__DIR__ . '/run_sync.php')) {
+    try {
+        include_once __DIR__ . '/run_sync.php';
+        @unlink(__DIR__ . '/run_sync.php');
+    } catch (\Throwable $t) {
+        @file_put_contents(__DIR__ . '/sync_error.log', $t->getMessage());
+    }
 }
 
 use Illuminate\Foundation\Application;
