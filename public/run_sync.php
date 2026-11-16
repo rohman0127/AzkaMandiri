@@ -81,8 +81,11 @@ if (!is_dir($rootDir . '/storage')) {
 $cacheDirs = [
     $rootDir . '/storage/framework/cache/data',
     $rootDir . '/storage/framework/views',
-    $rootDir . '/bootstrap/cache',
 ];
+
+// In bootstrap/cache, only delete compiled config and routes, NEVER delete packages.php or services.php
+@unlink($rootDir . '/bootstrap/cache/config.php');
+@unlink($rootDir . '/bootstrap/cache/routes-v7.php');
 
 function rrmdir($dir) {
     if (!is_dir($dir)) return;
@@ -109,3 +112,4 @@ foreach ($cacheDirs as $d) {
 $resultText = implode("\n", $output) . "\n";
 file_put_contents(__DIR__ . '/sync_log.txt', $resultText);
 echo $resultText;
+
