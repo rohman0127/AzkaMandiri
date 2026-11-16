@@ -236,11 +236,12 @@
                         </td>
                         @endif
                         <td style="vertical-align: top;">
-                            <div class="company-name" style="color: #1b2e56; font-family: 'Times New Roman', serif; font-size: 21px; font-weight: bold; letter-spacing: 0.8px; line-height: 1.1;">{{ setting('company_name', setting('site_name', 'AZKA MANDIRI')) }}</div>
-                            <div class="company-sub" style="color: #a81b3e; font-weight: bold; font-size: 9.5px; letter-spacing: 0.5px; margin-top: 2px;">SPESIALIS ALUMINIUM, KACA &amp; FABRIKASI INTERIOR</div>
+                            <div class="company-name" style="color: #1b2e56; font-family: 'Times New Roman', serif; font-size: 21px; font-weight: bold; letter-spacing: 0.8px; line-height: 1.1;">AZKA MANDIRI</div>
+                            <div class="company-sub" style="color: #a81b3e; font-weight: bold; font-size: 9.5px; letter-spacing: 0.5px; margin-top: 2px;">SPESIALIS ALUMINIUM, KACA &amp; INTERIOR</div>
                             <div class="company-contact" style="font-size: 8.5px; color: #64748b; line-height: 1.35; margin-top: 3px;">
-                                {{ setting('company_address', setting('address', 'Jl. Pondok Serut, Paku Jaya, Kec. Serpong Utara, Kota Tangerang Selatan, Banten 15220')) }}<br>
-                                Telepon / WhatsApp: {{ setting('company_phone', setting('phone_number', '+62 819-3273-5383')) }} &bull; Email: {{ setting('company_email', setting('email', 'kontak@azkamandiri.com')) }}
+                                Jl. Pondok Serut, Paku Jaya, Kec. Serpong Utara<br>
+                                Kota Tangerang Selatan, Banten 15220<br>
+                                Telepon / WhatsApp: +62 819-3273-5383 &bull; Email: kontak@azkamandiri.com
                             </div>
                         </td>
                     </tr>
@@ -264,7 +265,7 @@
                     </tr>
                     <tr>
                         <td class="text-right" style="color: #64748b;">Estimator / Petugas :</td>
-                        <td class="text-right">{{ $quotation->creator->name ?? 'Administrator AzkaMandiri' }}</td>
+                        <td class="text-right">{{ $quotation->creator->name ?? 'Administrator Azka Mandiri' }}</td>
                     </tr>
                 </table>
             </td>
@@ -361,8 +362,8 @@
                 @endif
                 <div class="terms-box" style="margin-top: 0;">
                     <div class="terms-title">Informasi Rekening Pembayaran Resmi:</div>
-                    <strong>Bank BCA:</strong> 842-099-1234 a.n. <strong>Azka Mandiri</strong><br>
-                    <span style="font-size: 8px; color: #64748b;">Harap cantumkan No. Penawaran pada berita transfer dan konfirmasikan bukti pembayaran.</span>
+                    &bull; <strong>Bank BCA:</strong> 474-0850-364 a.n. <strong>Mikliw Oking</strong><br>
+                    <span style="font-size: 8px; color: #64748b;">Harap cantumkan No. Penawaran ({{ $quotation->quotation_number }}) pada berita transfer dan konfirmasikan bukti pembayaran.</span>
                 </div>
             </td>
             <td style="width: 45%; vertical-align: top;">
@@ -404,10 +405,11 @@
     <table class="signature-table">
         <tr>
             <td class="signature-box">
-                <div style="font-size: 9px; color: #64748b;">Diajukan &amp; Diterbitkan Oleh:</div>
-                <div style="font-size: 10px; font-weight: bold; color: #0f172a; margin-top: 2px;">{{ setting('company_name', 'AzkaMandiri') }}</div>
+                <div style="font-size: 9px; color: #64748b;">Tangerang Selatan, {{ $quotation->date ? $quotation->date->translatedFormat('d F Y') : date('d F Y') }}</div>
+                <div style="font-size: 9px; color: #64748b; margin-top: 2px;">Diajukan &amp; Diterbitkan Oleh:</div>
+                <div style="font-size: 10px; font-weight: bold; color: #0f172a; margin-top: 2px;">Azka Mandiri</div>
                 <div class="signature-space"></div>
-                <div class="signature-name">{{ $quotation->creator->name ?? 'Estimator Proyek' }}</div>
+                <div class="signature-name">{{ $quotation->creator->name ?? 'Administrator Azka Mandiri' }}</div>
                 <div class="signature-role">Estimator Teknis / Marketing</div>
             </td>
             <td style="width: 10%;"></td>
@@ -422,7 +424,7 @@
     </table>
 
     <div class="footer">
-        Dokumen Surat Penawaran Harga ini digenerate secara resmi melalui Sistem ERP Enterprise AzkaMandiri. &bull; Halaman 1 dari 1
+        Dokumen Surat Penawaran Harga ini digenerate secara resmi melalui Sistem POS &amp; ERP Azka Mandiri. &bull; Halaman 1 dari 1
     </div>
 
 </body>

@@ -24,7 +24,7 @@
                     </span>
                 @endif
             </div>
-            <p class="text-xs text-slate-500 mt-1">Diterbitkan pada {{ $quotation->date ? $quotation->date->translatedFormat('d F Y') : '-' }} &bull; Estimator: <strong>{{ $quotation->creator->name ?? 'Admin' }}</strong></p>
+            <p class="text-xs text-slate-500 mt-1">Diterbitkan pada {{ $quotation->date ? $quotation->date->translatedFormat('d F Y') : '-' }} &bull; Estimator: <strong>{{ $quotation->creator->name ?? 'Administrator Azka Mandiri' }}</strong></p>
         </div>
 
         <!-- Action Buttons Toolbar -->
@@ -385,7 +385,7 @@
 
                 <div class="flex items-center justify-between">
                     <span class="text-slate-500">Disiapkan Oleh:</span>
-                    <span class="font-semibold text-slate-800">{{ $quotation->creator->name ?? 'Admin' }}</span>
+                    <span class="font-semibold text-slate-800">{{ $quotation->creator->name ?? 'Administrator Azka Mandiri' }}</span>
                 </div>
 
                 <div class="flex items-center justify-between">
@@ -398,18 +398,13 @@
             <div class="bg-slate-50 rounded-2xl border border-slate-200/80 p-5 space-y-2 text-xs">
                 <p class="font-bold text-slate-800 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
                     <i data-lucide="credit-card" class="w-3.5 h-3.5 text-primary"></i>
-                    <span>Rekening Resmi AzkaMandiri</span>
+                    <span>Rekening Resmi Azka Mandiri</span>
                 </p>
                 <div class="space-y-1.5 pt-1 text-slate-600">
                     <div>
-                        <p class="font-semibold text-slate-800">Bank Mandiri</p>
-                        <p class="font-mono text-[11px] text-slate-700">156-00-1888-9999</p>
-                        <p class="text-[10px] text-slate-400">a.n. CV Azka Mandiri Perkasa</p>
-                    </div>
-                    <div class="pt-1.5 border-t border-slate-200/60">
                         <p class="font-semibold text-slate-800">Bank BCA</p>
-                        <p class="font-mono text-[11px] text-slate-700">842-099-1234</p>
-                        <p class="text-[10px] text-slate-400">a.n. Azka Mandiri</p>
+                        <p class="font-mono text-xs font-bold text-slate-900">474-0850-364</p>
+                        <p class="text-[10px] text-slate-500">a.n. Mikliw Oking</p>
                     </div>
                 </div>
             </div>
